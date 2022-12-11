@@ -61,16 +61,16 @@
             $t("Reports")
           }}</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile @click="changeRoute('Snackbar', 8)">
+        <v-list-tile @click="changeRoute('DailySellReport', 8)">
           <v-list-tile-action> <v-icon>event_note</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 8 }, 'item-title']"
-            >{{ $t("Daily Sell List") }}</v-list-tile-title
+            >{{ $t("Daily Sell Report") }}</v-list-tile-title
           >
         </v-list-tile>
       </v-list-group>
 
-      <v-list-group prepend-icon="fingerprint">
+      <!-- <v-list-group prepend-icon="fingerprint">
         <v-list-tile slot="activator">
           <v-list-tile-title class="item-title">{{
             $t("authorization")
@@ -104,9 +104,9 @@
             $t("login")
           }}</v-list-tile-title>
         </v-list-tile>
-      </v-list-group>
+      </v-list-group> -->
 
-      <v-list-group prepend-icon="account_circle">
+      <!-- <v-list-group prepend-icon="account_circle">
         <v-list-tile slot="activator">
           <v-list-tile-title class="item-title">{{
             $t("users")
@@ -124,17 +124,17 @@
           </v-list-tile-action>
           <v-list-tile-title v-text="'Settings'"></v-list-tile-title>
         </v-list-tile>
-      </v-list-group>
+      </v-list-group> -->
 
-      <v-list-tile @click="changeRoute('Mailbox', 3)">
+      <!-- <v-list-tile @click="changeRoute('Mailbox', 3)">
         <v-list-tile-action> <v-icon>mail</v-icon> </v-list-tile-action>
         <v-list-tile-title
           :class="[{ active: selectedIndex === 3 }, 'item-title']"
           >{{ $t("mailbox") }}</v-list-tile-title
         >
-      </v-list-tile>
+      </v-list-tile> -->
 
-      <v-list-tile @click="changeRoute('Calendar', 2)">
+      <!-- <v-list-tile @click="changeRoute('Calendar', 2)">
         <v-list-tile-action>
           <v-icon>calendar_today</v-icon>
         </v-list-tile-action>
@@ -143,7 +143,7 @@
         >
           {{ $t("calendar") }}</v-list-tile-title
         >
-      </v-list-tile>
+      </v-list-tile> -->
     </v-list>
   </v-navigation-drawer>
 </template>

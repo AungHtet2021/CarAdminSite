@@ -27,9 +27,9 @@
       </v-flex>
       <!-- Statistics Ends -->
       <!-- DataTable&TimeLine Starts -->
-      <v-flex d-flex lg8 sm6 xs12>
+      <!-- <v-flex d-flex lg8 sm6 xs12>
         <data-table/>
-      </v-flex>
+      </v-flex> -->
       <!-- <v-flex d-flex lg4 sm6 xs12>
         <time-line />
       </v-flex> -->

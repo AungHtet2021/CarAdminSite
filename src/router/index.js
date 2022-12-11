@@ -7,6 +7,7 @@ import Brand from '../pages/Brand.vue';
 import Discount from '../pages/Discount.vue';
 import Category from '../pages/Category.vue';
 import CarList from '../pages/CarList.vue';
+import DailySellReport from '../pages/DailySellReport.vue';
 import Media from '../pages/Media.vue';
 import Snackbar from '../pages/Snackbar.vue';
 import Chart from '../pages/Chart.vue';
@@ -104,7 +105,7 @@ export default new Router({
       component: Brand,
       meta: {
         breadcrumb: [
-          { name: 'dashboard', href: 'Dashboard' },
+          { name: 'Setups' },
           { name: 'brand' }
         ]
       }
@@ -116,7 +117,7 @@ export default new Router({
       component: Category,
       meta: {
         breadcrumb: [
-          { name: 'dashboard', href: 'Dashboard' },
+          { name: 'Setups' },
           { name: 'category' }
         ]
       }
@@ -128,7 +129,7 @@ export default new Router({
       component: Discount,
       meta: {
         breadcrumb: [
-          { name: 'dashboard', href: 'Dashboard' },
+          { name: 'Setups' },
           { name: 'discount' }
         ]
       }
@@ -140,8 +141,20 @@ export default new Router({
       component: CarList,
       meta: {
         breadcrumb: [
-          { name: 'dashboard', href: 'Dashboard' },
+          { name: 'Setups' },
           { name: 'car' }
+        ]
+      }
+    },
+
+    {
+      path: '/daily-sell-report',
+      name: 'DailySellReport',
+      component: DailySellReport,
+      meta: {
+        breadcrumb: [
+          { name: 'Reports' },
+          { name: 'Daily Sell Report' }
         ]
       }
     },
