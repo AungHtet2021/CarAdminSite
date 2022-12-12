@@ -1,9 +1,16 @@
 <template>
+<div>
   <v-breadcrumbs :items="items" class="breadcrumbs" divider="/">
     <template slot="item" slot-scope="props">
+
       <router-link :to="{ name: props.item.href }" class="link">{{ $t(props.item.name) }}</router-link>
+
     </template>
+
   </v-breadcrumbs>
+
+</div>
+
 </template>
 
 <script>
@@ -33,6 +40,8 @@ export default {
       const vm = this;
 
       vm.items = vm.$route.meta.breadcrumb;
+
+
     }
   }
 }

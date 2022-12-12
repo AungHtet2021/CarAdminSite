@@ -1,10 +1,74 @@
 <template>
 
-<v-data-table
+<div>
+  <v-btn
+              dark
+
+              @click="showForm=true">ADD BRAND</v-btn>
+             <v-dialog  v-model="showForm" max-width="500px">
+                <v-card>
+                  <v-col cols="12" md="8">
+                      <v-card-text class="mt-12">
+                        <h1 class="text-center display-2 teal--text text--accent-3">Create Brand</h1>
+                        <div class="text-center mt-4">
+                          <!-- <v-btn class="mx-2" fab color="red" outlined>
+                            <v-icon>fab fa-facebook-f</v-icon>
+                          </v-btn> -->
+                          <img src="static/car1.PNG" width="72px" />
+
+<!--
+                          <v-btn class="mx-2" fab color="black" outlined>
+                            <v-icon>fab fa-google-plus-g</v-icon>
+                          </v-btn>
+                          <v-btn class="mx-2" fab color="black" outlined>
+                            <v-icon>fab fa-linkedin-in</v-icon>
+                          </v-btn> -->
+                        </div>
+                        <!-- <h4 class="text-center mt-4">Ensure your email for registration</h4> -->
+                        <v-form>
+                          <v-text-field
+                            label="Brand Name"
+                            name="Name"
+                            prepend-icon="person"
+                            type="text"
+                            color="teal accent-3"
+                          />
+                          <v-text-field
+                            label="Produce Country"
+                            name="Name"
+                            prepend-icon="person"
+                            type="text"
+                            color="teal accent-3"
+                          />
+
+                          <!-- <v-text-field
+                            id="password"
+                            label="Password"
+                            name="password"
+                            prepend-icon="lock"
+                            type="password"
+                            color="teal accent-3"
+                          /> -->
+                        </v-form>
+                      </v-card-text>
+                      <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="teal accent-3" text @click="close">
+                    Cancel
+                </v-btn>
+                <v-btn color="teal accent-3" text @click="save">
+                    Save
+                </v-btn>
+            </v-card-actions>
+                    </v-col>
+                </v-card>
+                        </v-dialog>
+  <v-data-table
     class="table"
     :headers="headers"
     :items="users"
     :rows-per-page-items="[10, 25]">
+<v-btn>add</v-btn>
     <template slot="items" slot-scope="props">
       <td class="text-xs-left">
         <v-avatar size="42">
@@ -20,6 +84,7 @@
       <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
     </template>
   </v-data-table>
+</div>
 
 </template>
 
@@ -35,6 +100,7 @@ const avatars = [
 export default {
   data () {
     return {
+      showForm:false,
         users: [],
       headers: [
         {
@@ -86,6 +152,9 @@ export default {
     randomAvatar () {
 
       return avatars[Math.floor(Math.random() * avatars.length)];
+    },
+    addBrand(){
+      console.log('working')
     }
   },
 
@@ -112,4 +181,5 @@ export default {
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
     background-color: transparent;
   }
+
 </style>
