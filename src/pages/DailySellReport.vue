@@ -2,14 +2,14 @@
   <div>
     <vue-excel-xlsx
     class="excel"
-    color="primary"
+    color="secondary"
       :data="users"
       :columns="columns"
       :file-name="'DailySellReport'"
       :file-type="'xlsx'"
       :sheet-name="'sheetname'"
     >
-      Excel Export
+      EXCEL EXPORT
     </vue-excel-xlsx>
     <v-data-table
       class="table"

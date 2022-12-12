@@ -21,7 +21,7 @@
         color="white"
         dense /> -->
 
-    <!-- <v-dialog
+    <v-dialog
       v-model="dialog"
       width="500">
       <v-btn icon slot="activator">
@@ -49,7 +49,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
 
     <!-- <v-dialog
       v-model="dialogSettings"

@@ -70,7 +70,7 @@
         </v-list-tile>
       </v-list-group>
 
-      <!-- <v-list-group prepend-icon="fingerprint">
+       <!--<v-list-group prepend-icon="fingerprint">
         <v-list-tile slot="activator">
           <v-list-tile-title class="item-title">{{
             $t("authorization")
