@@ -1,5 +1,30 @@
 <template>
-
+<div>
+  <v-dialog v-model="dialog" width="650">
+      <div slot="activator"><v-btn color="primary">Create Category</v-btn></div>
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          Create Category
+        </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-text-field
+              name="categoryName"
+              label="Category Name"
+              type="text"
+              v-model="categoryName"
+              :error="error"
+              :rules="[rules.required]"
+            />
+          </v-form>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="login">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-data-table
         class="table"
         :headers="headers"
@@ -20,91 +45,109 @@
           <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
         </template>
       </v-data-table>
-
+    </div>
     </template>
 
-    <script>
-    const avatars = [
-      'https://avataaars.io/?accessoriesType=Blank&avatarStyle=Circle&clotheColor=PastelGreen&clotheType=ShirtScoopNeck&eyeType=Wink&eyebrowType=UnibrowNatural&facialHairColor=Black&facialHairType=MoustacheMagnum&hairColor=Platinum&mouthType=Concerned&skinColor=Tanned&topType=Turban',
-      'https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheColor=Gray02&clotheType=ShirtScoopNeck&eyeType=EyeRoll&eyebrowType=RaisedExcited&facialHairColor=Red&facialHairType=BeardMagestic&hairColor=Red&hatColor=White&mouthType=Twinkle&skinColor=DarkBrown&topType=LongHairBun',
-      'https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheColor=Black&clotheType=ShirtVNeck&eyeType=Surprised&eyebrowType=Angry&facialHairColor=Blonde&facialHairType=Blank&hairColor=Blonde&hatColor=PastelOrange&mouthType=Smile&skinColor=Black&topType=LongHairNotTooLong',
-      'https://avataaars.io/?accessoriesType=Round&avatarStyle=Circle&clotheColor=PastelOrange&clotheType=Overall&eyeType=Close&eyebrowType=AngryNatural&facialHairColor=Blonde&facialHairType=Blank&graphicType=Pizza&hairColor=Black&hatColor=PastelBlue&mouthType=Serious&skinColor=Light&topType=LongHairBigHair',
-      'https://avataaars.io/?accessoriesType=Kurt&avatarStyle=Circle&clotheColor=Gray01&clotheType=BlazerShirt&eyeType=Surprised&eyebrowType=Default&facialHairColor=Red&facialHairType=Blank&graphicType=Selena&hairColor=Red&hatColor=Blue02&mouthType=Twinkle&skinColor=Pale&topType=LongHairCurly',
-      'https://avataaars.io/?'
-    ];
-    export default {
-      data () {
-        return {
-            users: [],
-          headers: [
-            {
-              value: 'Avatar',
-              align: 'left',
-              sortable: false
-            },
-            {
-              text: 'Name',
-              value: 'Name',
-              align: 'left',
-              sortable: true
-            },
-            {
-              text: 'User Name',
-              value: 'Username',
-              align: 'left',
-              sortable: true
-            },
-            {
-              text: 'Email',
-              value: 'Email',
-              align: 'left',
-              sortable: true
-            },
-            {
-              text: 'Phone',
-              value: 'Phone',
-              align: 'left',
-              sortable: true
-            },
-            {
-              text: 'Company',
-              value: 'Company',
-              align: 'left',
-              sortable: true
-            },
-            {
-              text: 'Website',
-              value: 'Website',
-              align: 'left',
-              sortable: true
-            }
-          ]
+<script>
+const avatars = [
+  'https://avataaars.io/?accessoriesType=Blank&avatarStyle=Circle&clotheColor=PastelGreen&clotheType=ShirtScoopNeck&eyeType=Wink&eyebrowType=UnibrowNatural&facialHairColor=Black&facialHairType=MoustacheMagnum&hairColor=Platinum&mouthType=Concerned&skinColor=Tanned&topType=Turban',
+  'https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheColor=Gray02&clotheType=ShirtScoopNeck&eyeType=EyeRoll&eyebrowType=RaisedExcited&facialHairColor=Red&facialHairType=BeardMagestic&hairColor=Red&hatColor=White&mouthType=Twinkle&skinColor=DarkBrown&topType=LongHairBun',
+  'https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheColor=Black&clotheType=ShirtVNeck&eyeType=Surprised&eyebrowType=Angry&facialHairColor=Blonde&facialHairType=Blank&hairColor=Blonde&hatColor=PastelOrange&mouthType=Smile&skinColor=Black&topType=LongHairNotTooLong',
+  'https://avataaars.io/?accessoriesType=Round&avatarStyle=Circle&clotheColor=PastelOrange&clotheType=Overall&eyeType=Close&eyebrowType=AngryNatural&facialHairColor=Blonde&facialHairType=Blank&graphicType=Pizza&hairColor=Black&hatColor=PastelBlue&mouthType=Serious&skinColor=Light&topType=LongHairBigHair',
+  'https://avataaars.io/?accessoriesType=Kurt&avatarStyle=Circle&clotheColor=Gray01&clotheType=BlazerShirt&eyeType=Surprised&eyebrowType=Default&facialHairColor=Red&facialHairType=Blank&graphicType=Selena&hairColor=Red&hatColor=Blue02&mouthType=Twinkle&skinColor=Pale&topType=LongHairCurly',
+  'https://avataaars.io/?'
+];
+export default {
+  data () {
+    return {
+      categoryName:"",
+      dialog:false,
+      showResult:false,
+      rules: {
+    required: value => !!value || "Required."
+  },
+  error: false,
+        users: [],
+      headers: [
+        {
+          value: 'Avatar',
+          align: 'left',
+          sortable: false
+        },
+        {
+          text: 'Name',
+          value: 'Name',
+          align: 'left',
+          sortable: true
+        },
+        {
+          text: 'User Name',
+          value: 'Username',
+          align: 'left',
+          sortable: true
+        },
+        {
+          text: 'Email',
+          value: 'Email',
+          align: 'left',
+          sortable: true
+        },
+        {
+          text: 'Phone',
+          value: 'Phone',
+          align: 'left',
+          sortable: true
+        },
+        {
+          text: 'Company',
+          value: 'Company',
+          align: 'left',
+          sortable: true
+        },
+        {
+          text: 'Website',
+          value: 'Website',
+          align: 'left',
+          sortable: true
         }
-      },
-
-      methods: {
-        randomAvatar () {
-
-          return avatars[Math.floor(Math.random() * avatars.length)];
-        }
-      },
-
-      created() {
-        const vm = this;
-
-        vm.axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
-          var result = response && response.data;
-
-          vm.users = result;
-        });
-      }
-
+      ]
     }
+  },
+
+  methods: {
+    login() {
+      const vm = this;
+      if (!vm.categoryName) {
+        vm.result = "Category Name  can't be null.";
+        vm.showResult = true;
+
+        return;
+      } else {
+        vm.dialog = false;
+      }
+    },
+    randomAvatar () {
+
+      return avatars[Math.floor(Math.random() * avatars.length)];
+    }
+  },
+
+  created() {
+    const vm = this;
+
+    vm.axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
+      var result = response && response.data;
+
+      vm.users = result;
+    });
+  }
+
+}
 
 
-    </script>
+</script>
 
-    <style>
+<style>
       .table {
         border-radius: 3px;
         background-clip: border-box;

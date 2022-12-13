@@ -1,29 +1,63 @@
 <template>
-
-    <v-data-table
-        class="table"
-        :headers="headers"
-        :items="users"
-        :rows-per-page-items="[10, 25]">
-        <template slot="items" slot-scope="props">
-          <td class="text-xs-left">
-            <v-avatar size="42">
-              <img :src="randomAvatar()" alt="avatar">
-            </v-avatar>
-          </td>
-          <td class="text-xs-left">{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.username }}</td>
-          <td class="text-xs-left">{{ props.item.email }}</td>
-          <td class="text-xs-left">{{ props.item.phone }}</td>
-          <td class="text-xs-left">{{ props.item.company.name }}</td>
-          <td class="text-xs-left">{{ props.item.website }}</td>
-          <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
-        </template>
-      </v-data-table>
-
+<div>
+  <v-dialog v-model="showForm" max-width="500px">
+    <div slot="activator"><v-btn color="primary">Create Car</v-btn></div>
+    <v-card>
+      <v-card-title class="headline grey lighten-2" primary-title>Create Car </v-card-title>
+      <v-card-text>
+        <v-form>
+          <v-text-field label=" Name" name="name" type="text" color="teal accent-3" v-model="name" :error="error"
+            :rules="[rules.required]" />
+          <v-text-field label="Description" name="description" type="text" v-model="description" :error="error"
+            :rules="[rules.required]" color="teal accent-3" />
+          <v-col cols="12" sm="6" md="4">
+            <v-select :items="status" label="Used_Car/Brand_Car" v-model="newCar.status"></v-select>
+          </v-col>
+          <v-text-field label="Popular" name="popular" type="text" v-model="popular" :error="error"
+            :rules="[rules.required]" color="teal accent-3" />
+          <v-text-field label="Price" name="price" type="text" v-model="price" :error="error" :rules="[rules.required]"
+            color="teal accent-3" />
+          <v-text-field label="Waiting Time" name="waitingTime" type="time" v-model="waitingTime" :error="error"
+            :rules="[rules.required]" color="teal accent-3" />
+          <v-text-field label="Quantity" name="quantity" type="number" v-model="quantity" :error="error"
+            :rules="[rules.required]" color="teal accent-3" />
+          <v-text-field label="Created_At" name="createdAt" type="date" v-model="createdAt" :error="error"
+            :rules="[rules.required]" color="teal accent-3" />
+        </v-form>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" text @click="saveCar">
+          Save
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+<v-data-table
+    class="table"
+    :headers="headers"
+    :items="users"
+    :rows-per-page-items="[10, 25]">
+    <template slot="items" slot-scope="props">
+      <td class="text-xs-left">
+        <v-avatar size="42">
+          <img :src="randomAvatar()" alt="avatar">
+        </v-avatar>
+      </td>
+      <td class="text-xs-left">{{ props.item.name }}</td>
+      <td class="text-xs-left">{{ props.item.username }}</td>
+      <td class="text-xs-left">{{ props.item.email }}</td>
+      <td class="text-xs-left">{{ props.item.phone }}</td>
+      <td class="text-xs-left">{{ props.item.company.name }}</td>
+      <td class="text-xs-left">{{ props.item.website }}</td>
+      <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
     </template>
+  </v-data-table>
+</div>
+</template>
 
-    <script>
+<script>
     const avatars = [
       'https://avataaars.io/?accessoriesType=Blank&avatarStyle=Circle&clotheColor=PastelGreen&clotheType=ShirtScoopNeck&eyeType=Wink&eyebrowType=UnibrowNatural&facialHairColor=Black&facialHairType=MoustacheMagnum&hairColor=Platinum&mouthType=Concerned&skinColor=Tanned&topType=Turban',
       'https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheColor=Gray02&clotheType=ShirtScoopNeck&eyeType=EyeRoll&eyebrowType=RaisedExcited&facialHairColor=Red&facialHairType=BeardMagestic&hairColor=Red&hatColor=White&mouthType=Twinkle&skinColor=DarkBrown&topType=LongHairBun',
@@ -35,6 +69,23 @@
     export default {
       data () {
         return {
+          showForm:false,
+      status:["Used_Car","Brand_Car"],
+      newCar: {
+                name: "",
+                description: "",
+                popular:"",
+                price:"",
+                waitingTime:"",
+                quantity:"",
+                createdAt: "",
+                status:""
+
+            },
+            rules: {
+        required: value => !!value || "Required."
+      },
+      error: false,
             users: [],
           headers: [
             {
@@ -86,6 +137,10 @@
         randomAvatar () {
 
           return avatars[Math.floor(Math.random() * avatars.length)];
+        },
+        saveCar(){
+          const vm = this;
+          console.log(vm.createdAt)
         }
       },
 
@@ -104,7 +159,7 @@
 
     </script>
 
-    <style>
+<style>
       .table {
         border-radius: 3px;
         background-clip: border-box;

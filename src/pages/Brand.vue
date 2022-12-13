@@ -1,90 +1,44 @@
 <template>
-
-<div>
-  <v-btn
-              dark
-
-              @click="showForm=true">ADD BRAND</v-btn>
-             <v-dialog  v-model="showForm" max-width="500px">
-                <v-card>
-                  <v-col cols="12" md="8">
-                      <v-card-text class="mt-12">
-                        <h1 class="text-center display-2 teal--text text--accent-3">Create Brand</h1>
-                        <div class="text-center mt-4">
-                          <!-- <v-btn class="mx-2" fab color="red" outlined>
-                            <v-icon>fab fa-facebook-f</v-icon>
-                          </v-btn> -->
-                          <img src="static/car1.PNG" width="72px" />
-
-<!--
-                          <v-btn class="mx-2" fab color="black" outlined>
-                            <v-icon>fab fa-google-plus-g</v-icon>
-                          </v-btn>
-                          <v-btn class="mx-2" fab color="black" outlined>
-                            <v-icon>fab fa-linkedin-in</v-icon>
-                          </v-btn> -->
-                        </div>
-                        <!-- <h4 class="text-center mt-4">Ensure your email for registration</h4> -->
-                        <v-form>
-                          <v-text-field
-                            label="Brand Name"
-                            name="Name"
-                            prepend-icon="person"
-                            type="text"
-                            color="teal accent-3"
-                          />
-                          <v-text-field
-                            label="Produce Country"
-                            name="Name"
-                            prepend-icon="person"
-                            type="text"
-                            color="teal accent-3"
-                          />
-
-                          <!-- <v-text-field
-                            id="password"
-                            label="Password"
-                            name="password"
-                            prepend-icon="lock"
-                            type="password"
-                            color="teal accent-3"
-                          /> -->
-                        </v-form>
-                      </v-card-text>
-                      <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="teal accent-3" text @click="close">
-                    Cancel
-                </v-btn>
-                <v-btn color="teal accent-3" text @click="save">
-                    Save
-                </v-btn>
-            </v-card-actions>
-                    </v-col>
-                </v-card>
-                        </v-dialog>
-  <v-data-table
-    class="table"
-    :headers="headers"
-    :items="users"
-    :rows-per-page-items="[10, 25]">
-<v-btn>add</v-btn>
-    <template slot="items" slot-scope="props">
-      <td class="text-xs-left">
-        <v-avatar size="42">
-          <img :src="randomAvatar()" alt="avatar">
-        </v-avatar>
-      </td>
-      <td class="text-xs-left">{{ props.item.name }}</td>
-      <td class="text-xs-left">{{ props.item.username }}</td>
-      <td class="text-xs-left">{{ props.item.email }}</td>
-      <td class="text-xs-left">{{ props.item.phone }}</td>
-      <td class="text-xs-left">{{ props.item.company.name }}</td>
-      <td class="text-xs-left">{{ props.item.website }}</td>
-      <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
-    </template>
-  </v-data-table>
-</div>
+  <div>
+    <v-dialog v-model="dialog" width="650">
+      <div slot="activator"><v-btn color="primary">Create Brand</v-btn></div>
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          Create Brand
+        </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-text-field name="brandName" label="Brand Name" type="text" v-model="brandName" :error="error"
+              :rules="[rules.required]" />
+            <v-text-field name="produceCountry" label="Produce Country" type="text" v-model="produceCountry"
+              :error="error" :rules="[rules.required]" />
+          </v-form>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="login">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-data-table class="table" :headers="headers" :items="users" :rows-per-page-items="[10, 25]">
+      <v-btn>add</v-btn>
+      <template slot="items" slot-scope="props">
+        <td class="text-xs-left">
+          <v-avatar size="42">
+            <img :src="randomAvatar()" alt="avatar">
+          </v-avatar>
+        </td>
+        <td class="text-xs-left">{{ props.item.name }}</td>
+        <td class="text-xs-left">{{ props.item.username }}</td>
+        <td class="text-xs-left">{{ props.item.email }}</td>
+        <td class="text-xs-left">{{ props.item.phone }}</td>
+        <td class="text-xs-left">{{ props.item.company.name }}</td>
+        <td class="text-xs-left">{{ props.item.website }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
+      </template>
+    </v-data-table>
+  </div>
 
 </template>
 
@@ -98,10 +52,16 @@ const avatars = [
   'https://avataaars.io/?'
 ];
 export default {
-  data () {
+  data() {
     return {
-      showForm:false,
-        users: [],
+      brandName:"",
+      produceCountry:"",
+      dialog: false,
+      rules: {
+        required: value => !!value || "Required."
+      },
+      error: false,
+      users: [],
       headers: [
         {
           value: 'Avatar',
@@ -149,13 +109,14 @@ export default {
   },
 
   methods: {
-    randomAvatar () {
+    randomAvatar() {
 
       return avatars[Math.floor(Math.random() * avatars.length)];
     },
-    addBrand(){
-      console.log('working')
+    saveBrand() {
+      console.log('saveBrand')
     }
+
   },
 
   created() {
@@ -163,7 +124,6 @@ export default {
 
     vm.axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
       var result = response && response.data;
-
       vm.users = result;
     });
   }
@@ -174,12 +134,11 @@ export default {
 </script>
 
 <style>
-  .table {
-    border-radius: 3px;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
-    background-color: transparent;
-  }
-
+.table {
+  border-radius: 3px;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
+  background-color: transparent;
+}
 </style>
