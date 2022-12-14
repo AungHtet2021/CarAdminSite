@@ -141,7 +141,7 @@ export default {
     login() {
       const vm = this;
       if (!vm.discountName || !vm.percentage) {
-        vm.result = "Discount Name and Percentage can't be null.";
+        vm.result = "Please check required fields";
         vm.showResult = true;
 
         return;
