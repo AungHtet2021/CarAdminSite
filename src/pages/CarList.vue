@@ -12,7 +12,6 @@
               label=" Name"
               name="Carname"
               type="text"
-              color="teal accent-3"
               v-model="newCar.name"
               :error="error"
               :rules="[rules.required]"
@@ -21,16 +20,12 @@
               <v-select
                 :items="status"
                 label="Used_Car/Brand_Car"
+                item-text="name"
+                item-value="id"
                 v-model="newCar.status"
               ></v-select>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-select
-                :items="isPopular"
-                label="Popular"
-                v-model="newCar.popular"
-              ></v-select>
-            </v-col>
+
             <v-text-field
               label="Quantity"
               name="quantity"
@@ -38,7 +33,6 @@
               v-model="newCar.quantity"
               :error="error"
               :rules="[rules.required]"
-              color="teal accent-3"
             />
             <v-text-field
               label="Price"
@@ -47,7 +41,7 @@
               v-model="newCar.price"
               :error="error"
               :rules="[rules.required]"
-              color="teal accent-3"
+              suffix="$"
             />
             <v-text-field
               label="Waiting Time"
@@ -56,24 +50,20 @@
               v-model="newCar.waitingTime"
               :error="error"
               :rules="[rules.required]"
-              color="teal accent-3"
+              suffix="Week"
             />
-            <v-text-field
-              label="Created_At"
-              name="createdAt"
-              type="date"
-              v-model="newCar.createdAt"
-              :error="error"
-              :rules="[rules.required]"
-              color="teal accent-3"
-            />
+
+            <v-checkbox
+              v-model="newCar.isPublic"
+              :label="'IsPublic'"
+            ></v-checkbox>
+
             <v-textarea
               label="Description"
               name="description"
               v-model="newCar.description"
               :error="error"
               :rules="[rules.required]"
-              color="teal accent-3"
             />
           </v-form>
         </v-card-text>
@@ -121,17 +111,25 @@ export default {
   data() {
     return {
       showForm: false,
-      status: ["Used_Car", "Brand_Car"],
-      isPopular: ["1", "2"],
+      status: [
+        {
+          name: "Brand New",
+          id: 1
+        },
+        {
+          name: "Used",
+          id: 2
+        }
+      ],
       newCar: {
+        id : null,
         name: "",
         description: "",
-        popular: "",
-        price: "",
-        waitingTime: "",
-        quantity: "",
-        createdAt: "",
-        status: "Brand_Car"
+        isPublic: false,
+        price: null,
+        waitingTime: null,
+        quantity: null,
+        status: null
       },
       rules: {
         required: value => !!value || "Required."
