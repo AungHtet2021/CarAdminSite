@@ -21,7 +21,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="login">Save</v-btn>
+          <v-btn color="primary" @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -49,6 +49,7 @@
     </template>
 
 <script>
+import api from '../utils/api.js'
 const avatars = [
   'https://avataaars.io/?accessoriesType=Blank&avatarStyle=Circle&clotheColor=PastelGreen&clotheType=ShirtScoopNeck&eyeType=Wink&eyebrowType=UnibrowNatural&facialHairColor=Black&facialHairType=MoustacheMagnum&hairColor=Platinum&mouthType=Concerned&skinColor=Tanned&topType=Turban',
   'https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheColor=Gray02&clotheType=ShirtScoopNeck&eyeType=EyeRoll&eyebrowType=RaisedExcited&facialHairColor=Red&facialHairType=BeardMagestic&hairColor=Red&hatColor=White&mouthType=Twinkle&skinColor=DarkBrown&topType=LongHairBun',
@@ -115,15 +116,27 @@ export default {
   },
 
   methods: {
-    login() {
-      const vm = this;
-      if (!vm.categoryName) {
-        vm.result = "Category Name  can't be null.";
-        vm.showResult = true;
+    // login() {
+    //   const vm = this;
+    //   if (!vm.categoryName) {
+    //     vm.result = "Category Name  can't be null.";
+    //     vm.showResult = true;
 
-        return;
-      } else {
-        vm.dialog = false;
+    //     return;
+    //   } else {
+    //     vm.dialog = false;
+    //   }
+    // },
+
+
+    async save() {
+      const resp=await api.save("category/create",
+      {
+        categoryName:this.categoryName,
+      });
+      if(resp){
+        this.categoryName=" ";
+        this.dialog=false;
       }
     },
     randomAvatar () {
@@ -141,7 +154,6 @@ export default {
       vm.users = result;
     });
   }
-
 }
 
 

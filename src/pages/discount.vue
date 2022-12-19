@@ -158,7 +158,6 @@ export default {
       .get("https://jsonplaceholder.typicode.com/users")
       .then(response => {
         var result = response && response.data;
-
         vm.users = result;
       });
   }

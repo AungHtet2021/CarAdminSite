@@ -8,16 +8,16 @@
         </v-card-title>
         <v-card-text>
           <v-form>
-            <v-text-field name="brandName" label="Brand Name" type="text" v-model="brandName" :error="error"
+            <v-text-field name="brandName" label="Brand Name" type="text" v-model="newList.brandName" :error="error"
               :rules="[rules.required]" />
-            <v-text-field name="produceCountry" label="Produce Country" type="text" v-model="produceCountry"
+            <v-text-field name="produceCountry" label="Produce Country" type="text" v-model="newList.produceCountry"
               :error="error" :rules="[rules.required]" />
           </v-form>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="login">Save</v-btn>
+          <v-btn color="primary" @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import api from '../utils/api.js'
 const avatars = [
   'https://avataaars.io/?accessoriesType=Blank&avatarStyle=Circle&clotheColor=PastelGreen&clotheType=ShirtScoopNeck&eyeType=Wink&eyebrowType=UnibrowNatural&facialHairColor=Black&facialHairType=MoustacheMagnum&hairColor=Platinum&mouthType=Concerned&skinColor=Tanned&topType=Turban',
   'https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheColor=Gray02&clotheType=ShirtScoopNeck&eyeType=EyeRoll&eyebrowType=RaisedExcited&facialHairColor=Red&facialHairType=BeardMagestic&hairColor=Red&hatColor=White&mouthType=Twinkle&skinColor=DarkBrown&topType=LongHairBun',
@@ -54,8 +55,10 @@ const avatars = [
 export default {
   data() {
     return {
+      newList:{
       brandName:"",
       produceCountry:"",
+      },
       dialog: false,
       rules: {
         required: value => !!value || "Required."
@@ -109,24 +112,30 @@ export default {
   },
 
   methods: {
-    randomAvatar() {
-
-      return avatars[Math.floor(Math.random() * avatars.length)];
-    },
-    saveBrand() {
-      console.log('saveBrand')
+    // randomAvatar() {
+    //   return avatars[Math.floor(Math.random() * avatars.length)];
+    // },
+    async save() {
+      const resp=await api.save("brand/create",
+      {
+        brandName:this.newList.brandName,
+        produceCountry:this.newList.produceCountry,
+      });
+      if(resp){
+        this.newList={};
+        this.dialog=false;
+      }
     }
-
   },
 
-  created() {
-    const vm = this;
+  // created() {
+  //   const vm = this;
 
-    vm.axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
-      var result = response && response.data;
-      vm.users = result;
-    });
-  }
+  //   vm.axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
+  //     var result = response && response.data;
+  //     vm.users = result;
+  //   });
+  // }
 
 }
 

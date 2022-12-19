@@ -7,7 +7,7 @@
       :columns="columns"
       :file-name="'DailySellReport'"
       :file-type="'xlsx'"
-      :sheet-name="'sheetname'"
+      :sheet-name="'sheet'"
     >
       EXCEL EXPORT
     </vue-excel-xlsx>
@@ -114,12 +114,10 @@ export default {
 
   created() {
     const vm = this;
-
     vm.axios
       .get("https://jsonplaceholder.typicode.com/users")
       .then(response => {
         var result = response && response.data;
-
         vm.users = result;
       });
   }
