@@ -1,6 +1,6 @@
 <template>
-<div>
-  <v-dialog v-model="dialog" width="650">
+  <div>
+    <v-dialog v-model="dialog" width="650">
       <div slot="activator"><v-btn color="primary">Create Category</v-btn></div>
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
@@ -8,14 +8,8 @@
         </v-card-title>
         <v-card-text>
           <v-form>
-            <v-text-field
-              name="categoryName"
-              label="Category Name"
-              type="text"
-              v-model="categoryName"
-              :error="error"
-              :rules="[rules.required]"
-            />
+            <v-text-field name="categoryName" label="Category Name" type="text" v-model="category.categoryName"
+              :error="error" :rules="[rules.required]" />
           </v-form>
         </v-card-text>
         <v-divider></v-divider>
@@ -25,146 +19,167 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-data-table
-        class="table"
-        :headers="headers"
-        :items="users"
-        :rows-per-page-items="[10, 25]">
-        <template slot="items" slot-scope="props">
-          <td class="text-xs-left">
-            <v-avatar size="42">
-              <img :src="randomAvatar()" alt="avatar">
-            </v-avatar>
-          </td>
-          <td class="text-xs-left">{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.username }}</td>
-          <td class="text-xs-left">{{ props.item.email }}</td>
-          <td class="text-xs-left">{{ props.item.phone }}</td>
-          <td class="text-xs-left">{{ props.item.company.name }}</td>
-          <td class="text-xs-left">{{ props.item.website }}</td>
-          <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
-        </template>
-      </v-data-table>
-    </div>
-    </template>
+    <v-data-table :headers="headers" :items="categorys" :items-per-page="7" class="elevation-1">
+      <template slot="items" slot-scope="props">
+        <td class="text-xs-center">{{ props.item.id }}</td>
+        <td class="text-xs-left">{{ props.item.categoryName }}</td>
+        <td class="text-xs-left">
+          <v-icon small @click="deleteItem(props)">delete</v-icon>
+          <v-icon small @click="editCategory(props)">edit</v-icon>
+        </td>
+      </template>
+    </v-data-table>
+    <v-dialog v-model="deleteDialog" width="400">
+      <v-card>
+        <v-card-title class="text-h5">Are you sure you want to delete this CAR Category?</v-card-title>
+        <v-card-text>ID - {{ selectDemo.id }}</v-card-text>
+        <v-card-text>Brand Name - {{ selectDemo.categoryName }}</v-card-text>
+        <v-btn @click="deleteCategory(selectDemo.id)">Delete</v-btn>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="editDialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Edit Brand</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-text-field v-model="category.id" label="Category Id"></v-text-field>
+            <v-text-field v-model="category.categoryName" label="Cateory name"></v-text-field>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="editSave(category.id)">
+            editSave
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
+      {{ result }}
+    </v-snackbar>
+  </div>
+</template>
 
 <script>
 import api from '../utils/api.js'
-const avatars = [
-  'https://avataaars.io/?accessoriesType=Blank&avatarStyle=Circle&clotheColor=PastelGreen&clotheType=ShirtScoopNeck&eyeType=Wink&eyebrowType=UnibrowNatural&facialHairColor=Black&facialHairType=MoustacheMagnum&hairColor=Platinum&mouthType=Concerned&skinColor=Tanned&topType=Turban',
-  'https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheColor=Gray02&clotheType=ShirtScoopNeck&eyeType=EyeRoll&eyebrowType=RaisedExcited&facialHairColor=Red&facialHairType=BeardMagestic&hairColor=Red&hatColor=White&mouthType=Twinkle&skinColor=DarkBrown&topType=LongHairBun',
-  'https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheColor=Black&clotheType=ShirtVNeck&eyeType=Surprised&eyebrowType=Angry&facialHairColor=Blonde&facialHairType=Blank&hairColor=Blonde&hatColor=PastelOrange&mouthType=Smile&skinColor=Black&topType=LongHairNotTooLong',
-  'https://avataaars.io/?accessoriesType=Round&avatarStyle=Circle&clotheColor=PastelOrange&clotheType=Overall&eyeType=Close&eyebrowType=AngryNatural&facialHairColor=Blonde&facialHairType=Blank&graphicType=Pizza&hairColor=Black&hatColor=PastelBlue&mouthType=Serious&skinColor=Light&topType=LongHairBigHair',
-  'https://avataaars.io/?accessoriesType=Kurt&avatarStyle=Circle&clotheColor=Gray01&clotheType=BlazerShirt&eyeType=Surprised&eyebrowType=Default&facialHairColor=Red&facialHairType=Blank&graphicType=Selena&hairColor=Red&hatColor=Blue02&mouthType=Twinkle&skinColor=Pale&topType=LongHairCurly',
-  'https://avataaars.io/?'
-];
+
 export default {
-  data () {
+  data() {
     return {
-      categoryName:"",
-      dialog:false,
-      showResult:false,
+      editDialog: false,
+      deleteDialog: false,
+      selectDemo: {},
+      categorys: [],
+      category: [],
+      category: {
+        categoryName: ""
+      },
+      result: "",
+
+      dialog: false,
+      showResult: false,
       rules: {
-    required: value => !!value || "Required."
-  },
-  error: false,
-        users: [],
+        required: value => !!value || "Required."
+      },
+      error: false,
+      users: [],
       headers: [
         {
-          value: 'Avatar',
-          align: 'left',
-          sortable: false
+          text: 'Id',
+          align: 'start',
+          sortable: true,
+          value: 'id',
         },
         {
-          text: 'Name',
-          value: 'Name',
-          align: 'left',
-          sortable: true
+          text: "Brand Name",
+          value: "brandName",
+          align: "left",
+          sortable: true,
         },
-        {
-          text: 'User Name',
-          value: 'Username',
-          align: 'left',
-          sortable: true
-        },
-        {
-          text: 'Email',
-          value: 'Email',
-          align: 'left',
-          sortable: true
-        },
-        {
-          text: 'Phone',
-          value: 'Phone',
-          align: 'left',
-          sortable: true
-        },
-        {
-          text: 'Company',
-          value: 'Company',
-          align: 'left',
-          sortable: true
-        },
-        {
-          text: 'Website',
-          value: 'Website',
-          align: 'left',
-          sortable: true
-        }
+        { text: 'Actions', value: 'actions' },
       ]
-    }
+    };
   },
-
+  async created() {
+    await this.getAllCategorys();
+  },
   methods: {
-    // login() {
-    //   const vm = this;
-    //   if (!vm.categoryName) {
-    //     vm.result = "Category Name  can't be null.";
-    //     vm.showResult = true;
-
-    //     return;
-    //   } else {
-    //     vm.dialog = false;
-    //   }
-    // },
-
-
-    async save() {
-      const resp=await api.save("category/create",
-      {
-        categoryName:this.categoryName,
-      });
-      if(resp){
-        this.categoryName=" ";
-        this.dialog=false;
+    deleteItem(props) {
+      this.deleteDialog = true;
+      this.selectDemo = props.item;
+    },
+    async deleteCategory(id) {
+      const resp = await api.remove("category/delete/" + id);
+      if (resp.status == 200) {
+        this.deleteDialog = false;
+        console.log('delete is working')
+        await this.getAllCategorys();
+      }
+      else {
+        console.log("sth wrong in delete id");
       }
     },
-    randomAvatar () {
-
+    async save() {
+      const resp = await api.save("category/create",
+        {
+          categoryName: this.category.categoryName,
+        });
+      if (resp) {
+        this.category = {};
+        this.getAllCategorys();
+        this.dialog = false;
+      }
+    },
+    randomAvatar() {
       return avatars[Math.floor(Math.random() * avatars.length)];
-    }
+    },
+
+    async getAllCategorys() {
+      const resp = await api.get("category/get/categorys");
+      if (resp) {
+        const data = await resp.json();
+        if (data) this.categorys = data;
+      }
+      else {
+        console.log("something wrong")
+      }
+    },
+    async editCategory(props) {
+      this.editDialog = true;
+      const resp = await api.get("category/get/category/" + props.item.id);
+      if (resp) {
+        const data = await resp.json();
+        if (data) this.category = data;
+      }
+      else {
+        console.log("something wrong")
+      }
+    },
+    async editSave(id) {
+      const resp = await api.update("category/update/" + id, {
+        id: this.category.id,
+        categoryName: this.category.categoryName,
+
+      });
+      if (resp) {
+        this.getAllCategorys();
+        this.editDialog = false;
+      }
+    },
   },
-
-  created() {
-    const vm = this;
-
-    vm.axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
-      var result = response && response.data;
-
-      vm.users = result;
-    });
-  }
 }
 
 
 </script>
 
 <style>
-      .table {
-        border-radius: 3px;
-        background-clip: border-box;
-        border: 1px solid rgba(0, 0, 0, 0.125);
-        box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
-        background-color: transparent;
-      }
-    </style>
+.table {
+  border-radius: 3px;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
+  background-color: transparent;
+}
+</style>

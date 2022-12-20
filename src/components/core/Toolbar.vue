@@ -21,7 +21,7 @@
         color="white"
         dense /> -->
 
-    <v-dialog
+    <!-- <v-dialog
       v-model="dialog"
       width="500">
       <v-btn icon slot="activator">
@@ -49,7 +49,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <!-- <v-dialog
       v-model="dialogSettings"
@@ -205,7 +205,7 @@
     <v-menu class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
       <v-btn icon large flat slot="activator" :ripple="false">
         <v-avatar size="42px">
-          <img src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&accessoriesType=Sunglasses&hairColor=Black&facialHairType=Blank&clotheType=CollarSweater&clotheColor=Black&eyeType=Default&eyebrowType=Default&mouthType=Smile&skinColor=Light"/>
+          <img src="./../../assets/kmt2.jpg"/>
         </v-avatar>
       </v-btn>
       <v-list>

@@ -57,11 +57,11 @@ new Vue({
       const vm = this;
 
       localStorage.setItem('language', language);
-    
+
       document.documentElement.lang = language;
-    
+
       vm.$i18n.locale = language;
-    
+
       vm.$vuetify.lang.current = language;
     }
   },
