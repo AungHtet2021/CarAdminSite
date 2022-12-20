@@ -8,7 +8,7 @@
           <v-content>
             <breadcrumbs />
             <router-view/>
-            <page-footer />
+            <!-- <page-footer /> -->
           </v-content>
         </div>
       </v-app>

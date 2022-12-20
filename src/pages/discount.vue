@@ -139,14 +139,13 @@ export default {
 
   methods: {
     login() {
-      const vm = this;
-      if (!vm.discountName || !vm.percentage) {
-        vm.result = "Please check required fields";
-        vm.showResult = true;
+      if (!this.discountName || !this.percentage) {
+        this.result = "Please check required fields";
+        this.showResult = true;
 
         return;
       } else {
-        vm.dialog = false;
+        this.dialog = false;
       }
     }
   },
