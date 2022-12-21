@@ -16,6 +16,29 @@
               :error="error"
               :rules="[rules.required]"
             />
+
+            <v-col cols="12" sm="6" md="4">
+              <v-select
+                :items="brandList"
+                label="Brand"
+                item-text="name"
+                item-value="id"
+                v-model="newCar.brandId"
+                :rules="[rules.required]"
+              ></v-select>
+            </v-col>
+
+            <v-col cols="12" sm="6" md="4">
+              <v-select
+                :items="categoryList"
+                label="Category"
+                item-text="name"
+                item-value="id"
+                v-model="newCar.categoryId"
+                :rules="[rules.required]"
+              ></v-select>
+            </v-col>
+
             <v-col cols="12" sm="6" md="4">
               <v-select
                 :items="status"
@@ -91,12 +114,9 @@
               :error="error"
               :rules="[rules.required]"
             />
-
           </v-form>
-
         </v-card-text>
         <v-divider></v-divider>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="saveCar">
@@ -124,19 +144,43 @@
         <td class="text-xs-left">{{ props.item.isPublic }}</td>
         <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
       </template>
-
     </v-data-table>
+    <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
+      {{ result }}
+    </v-snackbar>
   </div>
-
 </template>
 
 <script>
 import utils from "../utils/utils";
+import api from '../utils/api.js'
 export default {
   data() {
     return {
       showForm: false,
       status: [
+        {
+          name: "Brand New",
+          id: 1
+        },
+        {
+          name: "Used",
+          id: 2
+        }
+      ],
+
+      brandList: [
+        {
+          name: "Brand New",
+          id: 1
+        },
+        {
+          name: "Used",
+          id: 2
+        }
+      ],
+
+      categoryList: [
         {
           name: "Brand New",
           id: 1
@@ -153,6 +197,8 @@ export default {
       newCar: {
         id: null,
         name: "",
+        brandId: null,
+        categoryId: null,
         description: "",
         isPublic: false,
         price: null,
@@ -171,7 +217,6 @@ export default {
       error: false,
       users: [],
       headers: [
-
         {
           text: "Name",
           value: "name",
@@ -201,50 +246,92 @@ export default {
           value: "isPublic",
           align: "left",
           sortable: true
-        },
+        }
       ]
     };
   },
 
   methods: {
-    randomAvatar() {
-      return avatars[Math.floor(Math.random() * avatars.length)];
+
+    async getAllBrands() {
+      const resp = await api.get("brand/get/brands");
+      if (resp) {
+        const data = await resp.json();
+        if (data) this.brands = data;
+      }
+      else {
+        console.log("something wrong")
+      }
+    },
+
+    async getAllCategorys() {
+      const resp = await api.get("category/get/categorys");
+      if (resp) {
+        const data = await resp.json();
+        if (data) this.categorys = data;
+      }
+      else {
+        console.log("something wrong")
+      }
+    },
+    // saveCar() {
+    //   const vm = this;
+    //   vm.showForm = false;
+    // },
+
+    onFilePicked(e) {
+      const files = e.target.files;
+      if (files[0] !== undefined) {
+        this.imageName = files[0].name;
+        if (this.imageName.lastIndexOf(".") <= 0) {
+          return;
+        }
+        const fr = new FileReader();
+        fr.readAsDataURL(files[0]);
+        fr.addEventListener("load", () => {
+          this.imageUrl = fr.result;
+          this.imageFile = files[0]; // this is an image file that can be sent to server...
+          console.log(this.imageUrl), console.log(this.imageFile);
+        });
+      } else {
+        this.imageName = "";
+        this.imageFile = "";
+        this.imageUrl = "";
+      }
     },
 
     async saveCar() {
       if (this.$refs.carForm.validate()) {
         this.errorAlert = false;
         this.loading = true;
-          let respPosterData = null;
-          const respPoster = await utils.http.postMedia(
-            "/admin/file/create",
-            this.imageFile,
-            this.imageFile.type
-          );
-          if (respPoster.status === 200) {
-            respPosterData = await respPoster.text();
+        let respPosterData = null;
+        const respPoster = await utils.http.postMedia(
+          "/admin/file/create",
+          this.imageFile,
+          this.imageFile.type
+        );
+        if (respPoster.status === 200) {
+          respPosterData = await respPoster.text();
+        } else {
+          this.errorAlert = true;
+        }
+
+        if (respPosterData) {
+          const respMovie = await utils.http.post("/car/create", {
+            title: this.title,
+            overview: this.overview,
+            budget: this.budget,
+            category: { id: this.category },
+            adult: this.adult,
+            posterPath: respPosterData,
+            trailerPath: respTrailerData
+          });
+          if (respMovie.status === 200) {
+            this.$router.push({ path: "/admin" });
           } else {
             this.errorAlert = true;
           }
-
-
-          // if (respPosterData) {
-          //   const respMovie = await utils.http.post("/admin/movie/create", {
-          //     title: this.title,
-          //     overview: this.overview,
-          //     budget: this.budget,
-          //     category: { id: this.category },
-          //     adult: this.adult,
-          //     posterPath: respPosterData,
-          //     trailerPath: respTrailerData
-          //   });
-          //   if (respMovie.status === 200) {
-          //     this.$router.push({ path: "/admin" });
-          //   } else {
-          //     this.errorAlert = true;
-          //   }
-          // }
-
+        }
 
         this.loading = false;
       } else {
@@ -254,88 +341,90 @@ export default {
     }
   },
 
-  created() {
-    const vm = this;
-    vm.users = [
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-         {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-      {
-        name : 'Landcruiser',
-        carType : 'Brand New',
-        quantity : '2',
-        waitingTime : '3',
-        isPublic : true
-      },
-    ];
+  async created() {
+    // const vm = this;
+    // vm.users = [
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   },
+    //   {
+    //     name: "Landcruiser",
+    //     carType: "Brand New",
+    //     quantity: "2",
+    //     waitingTime: "3",
+    //     isPublic: true
+    //   }
+    // ];
 
+    await this.getAllCategorys();
+    await this.getAllBrands();
   }
 };
 </script>

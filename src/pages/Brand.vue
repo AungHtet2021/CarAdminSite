@@ -23,7 +23,6 @@
     </v-dialog>
     <v-data-table :headers="headers" :items="brands" :items-per-page="7" class="elevation-1">
       <template slot="items" slot-scope="props">
-        <td class="text-xs-center">{{ props.item.id }}</td>
         <td class="text-xs-left">{{ props.item.brandName }}</td>
         <td class="text-xs-left">{{ props.item.produceCountry }}</td>
         <td class="text-xs-left">
@@ -35,7 +34,6 @@
     <v-dialog v-model="deleteDialog" width="450">
       <v-card>
         <v-card-title class="text-h5">Are you sure you want to delete this CAR BRAND?</v-card-title>
-        <v-card-text>ID - {{ selectDemo.id }}</v-card-text>
         <v-card-text>Brand Name - {{ selectDemo.brandName }}</v-card-text>
         <v-card-text>Produce Country - {{ selectDemo.produceCountry }}</v-card-text>
         <v-btn @click="deleteBrand(selectDemo.id)">Delete</v-btn>
@@ -48,7 +46,6 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field v-model="brand.id" label="Brand Id"></v-text-field>
             <v-text-field v-model="brand.brandName" label="Brand name"></v-text-field>
             <v-text-field v-model="brand.produceCountry" label="Produce Country"></v-text-field>
           </v-container>
@@ -84,12 +81,6 @@ export default {
       },
       error: false,
       headers: [
-        {
-          text: 'Id',
-          align: 'start',
-          sortable: false,
-          value: 'id',
-        },
         {
           text: "Brand Name",
           value: "brandName",

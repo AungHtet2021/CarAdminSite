@@ -21,7 +21,6 @@
     </v-dialog>
     <v-data-table :headers="headers" :items="categorys" :items-per-page="7" class="elevation-1">
       <template slot="items" slot-scope="props">
-        <td class="text-xs-center">{{ props.item.id }}</td>
         <td class="text-xs-left">{{ props.item.categoryName }}</td>
         <td class="text-xs-left">
           <v-icon small @click="deleteItem(props)">delete</v-icon>
@@ -32,7 +31,6 @@
     <v-dialog v-model="deleteDialog" width="400">
       <v-card>
         <v-card-title class="text-h5">Are you sure you want to delete this CAR Category?</v-card-title>
-        <v-card-text>ID - {{ selectDemo.id }}</v-card-text>
         <v-card-text>Brand Name - {{ selectDemo.categoryName }}</v-card-text>
         <v-btn @click="deleteCategory(selectDemo.id)">Delete</v-btn>
       </v-card>
@@ -44,7 +42,6 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field v-model="category.id" label="Category Id"></v-text-field>
             <v-text-field v-model="category.categoryName" label="Cateory name"></v-text-field>
           </v-container>
         </v-card-text>
@@ -86,12 +83,6 @@ export default {
       error: false,
       users: [],
       headers: [
-        {
-          text: 'Id',
-          align: 'start',
-          sortable: true,
-          value: 'id',
-        },
         {
           text: "Brand Name",
           value: "brandName",
