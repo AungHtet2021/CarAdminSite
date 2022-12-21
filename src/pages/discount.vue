@@ -8,12 +8,12 @@
         </v-card-title>
 
         <v-card-text>
-          <v-form>
+          <v-form ref="discountForm" v-model="discountForm">
             <v-text-field
               name="Discount Name"
               label="Discount Name"
               type="text"
-              v-model="discountName"
+              v-model="discount.discountName"
               :error="error"
               :rules="[rules.required]"
             />
@@ -22,21 +22,28 @@
               name="Percentage"
               label="Percentage"
               type="number"
-              v-model="percentage"
+              v-model="discount.percentage"
               :error="error"
               :rules="[rules.required]"
             ></v-text-field>
 
-            <div class="row">
-              <span> From Date </span>
-              <span style="margin-left: 39%;"> To Date </span>
-            </div>
-            <v-date-picker v-model="fromDate"></v-date-picker>
+            <v-text-field
+              name="FromDate"
+              label="From Date"
+              type="date"
+              v-model="discount.fromDate"
+              :error="error"
+              :rules="[rules.required]"
+            ></v-text-field>
 
-            <v-date-picker
-              v-model="toDate"
-              style="margin-left: 15px;"
-            ></v-date-picker>
+            <v-text-field
+              name="ToDate"
+              label="To Date"
+              type="date"
+              v-model="discount.toDate"
+              :error="error"
+              :rules="[rules.required]"
+            ></v-text-field>
           </v-form>
         </v-card-text>
 
@@ -44,7 +51,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="login">Save</v-btn>
+          <v-btn color="primary" @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -52,113 +59,178 @@
     <v-data-table
       class="table"
       :headers="headers"
-      :items="users"
+      :items="discountData"
       :rows-per-page-items="[10, 25]"
     >
       <template slot="items" slot-scope="props">
-        <td class="text-xs-left">{{ props.item.name }}</td>
-        <td class="text-xs-left">{{ props.item.username }}</td>
-        <td class="text-xs-left">{{ props.item.email }}</td>
-        <td class="text-xs-left">{{ props.item.phone }}</td>
-        <td class="text-xs-left">{{ props.item.company.name }}</td>
-        <td class="text-xs-left">{{ props.item.website }}</td>
+        <td class="text-xs-left">{{ props.item.discountName }}</td>
+        <td class="text-xs-left">{{ props.item.percentage }}</td>
+        <td class="text-xs-left">{{ props.item.fromDate }}</td>
+        <td class="text-xs-left">{{ props.item.toDate }}</td>
+        <td class="text-xs-left">
+          <v-icon class="edit" small @click="editDiscount(props)">edit</v-icon>
+          <v-icon class="delete" small @click="deleteItem(props)"
+            >delete</v-icon
+          >
+        </td>
       </template>
     </v-data-table>
-    <v-snackbar
-    color="red"
-        v-model="showResult"
-        :timeout="2000"
-        top>
-        {{ result }}
-      </v-snackbar>
+    <v-dialog v-model="deleteDialog" width="450">
+      <v-card>
+        <v-card-title class="headline lighten-2"> Delete Confirm</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete {{ selectDemo.discountName }} ?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="warn" @click="deleteDiscount(selectDemo.id)"
+            >Delete</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
+      {{ result }}
+    </v-snackbar>
   </div>
 </template>
 
 <script>
+import api from "../utils/api.js";
 export default {
   data() {
     return {
-      fromDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
-      toDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      discount: {
+        id: null,
+        discountName: "",
+        percentage: "",
+        fromDate: new Date(),
+        toDate: new Date()
+      },
       loading: false,
       dialog: false,
-      discountName: "",
-      percentage: "",
       hidePassword: true,
       error: false,
       showResult: false,
+      deleteDialog: false,
       result: "",
       rules: {
         required: value => !!value || "Required."
       },
-      users: [],
+      discountData: [],
+      discountForm: false,
+      selectDemo: {},
       headers: [
         {
-          text: "Name",
-          value: "Name",
+          text: "DiscountName",
+          value: "discountName",
           align: "left",
           sortable: true
         },
         {
-          text: "User Name",
-          value: "Username",
+          text: "Percentage",
+          value: "percentage",
           align: "left",
           sortable: true
         },
         {
-          text: "Email",
-          value: "Email",
+          text: "FromDate",
+          value: "fromDate",
           align: "left",
           sortable: true
         },
         {
-          text: "Phone",
-          value: "Phone",
+          text: "ToDate",
+          value: "toDate",
           align: "left",
           sortable: true
         },
-        {
-          text: "Company",
-          value: "Company",
-          align: "left",
-          sortable: true
-        },
-        {
-          text: "Website",
-          value: "Website",
-          align: "left",
-          sortable: true
-        }
+        { text: "Actions", value: "actions" }
       ]
     };
   },
 
   methods: {
-    login() {
-      if (!this.discountName || !this.percentage) {
+    async getAllDiscount() {
+      const resp = await api.get("discount/discountList");
+      if (resp) {
+        const data = await resp.json();
+        if (data) this.discountData = data;
+      } else {
+        console.log("something wrong");
+      }
+    },
+
+    async save() {
+      if (this.$refs.discountForm.validate()) {
+        if (this.discount.id == null) {
+          const resp = await api.save("discount/create", {
+            discountName: this.discount.discountName,
+            percentage: this.discount.percentage,
+            fromDate: this.discount.fromDate,
+            toDate: this.discount.toDate
+          });
+          if (resp) {
+            this.discount = {};
+            this.getAllDiscount();
+            this.dialog = false;
+          }
+        } else {
+          const resp = await api.update("discount/update/" + this.discount.id, {
+            id : this.discount.id,
+            discountName: this.discount.discountName,
+            percentage: this.discount.percentage,
+            fromDate: this.discount.fromDate,
+            toDate: this.discount.toDate
+          });
+          if (resp) {
+            this.discount = {};
+            this.getAllDiscount();
+            this.dialog = false;
+          }
+        }
+      } else {
         this.result = "Please check required fields";
         this.showResult = true;
-
         return;
+      }
+    },
+
+    async editDiscount(props) {
+      const resp = await api.get("discount/" + props.item.id);
+      if (resp) {
+        const data = await resp.json();
+        if (data) {
+          this.discount.id = data.id;
+          this.discount.discountName = data.discountName;
+          this.discount.percentage = data.percentage;
+          this.discount.fromDate = data.fromDate;
+          this.discount.toDate = data.toDate;
+          this.dialog = true;
+        }
       } else {
-        this.dialog = false;
+        console.log("something wrong");
+      }
+    },
+
+    deleteItem(props) {
+      this.deleteDialog = true;
+      this.selectDemo = props.item;
+    },
+
+    async deleteDiscount(id) {
+      const resp = await api.remove("discount/delete/" + id);
+      if (resp.status == 200) {
+        this.deleteDialog = false;
+        await this.getAllDiscount();
+      } else {
+        console.log("sth wrong in delete id");
       }
     }
   },
 
-  created() {
-    const vm = this;
-
-    vm.axios
-      .get("https://jsonplaceholder.typicode.com/users")
-      .then(response => {
-        var result = response && response.data;
-        vm.users = result;
-      });
+  async created() {
+    await this.getAllDiscount();
   }
 };
 </script>
@@ -171,7 +243,17 @@ export default {
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
   background-color: transparent;
 }
-.lighten-2{
- background-color: #e07001!important;
+.lighten-2 {
+  background-color: #e07001 !important;
+}
+
+.edit {
+  color: #ff9800 !important;
+  font-size: 20px !important;
+}
+
+.delete {
+  color: #f44336 !important;
+  font-size: 20px !important;
 }
 </style>

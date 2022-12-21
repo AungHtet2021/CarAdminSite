@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" width="650">
+    <v-dialog v-model="dialog" width="500px">
       <div slot="activator"><v-btn color="primary">Create Brand</v-btn></div>
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
@@ -10,8 +10,19 @@
           <v-form>
             <v-text-field name="brandName" label="Brand Name" type="text" v-model="newList.brandName" :error="error"
               :rules="[rules.required]" />
-            <v-text-field name="produceCountry" label="Produce Country" type="text" v-model="newList.produceCountry"
-              :error="error" :rules="[rules.required]" />
+
+              <v-col cols="12" sm="6" md="4">
+              <v-select
+                :items="countries"
+                label="Produce Country"
+                item-text="name"
+                item-value="id"
+                v-model="newList.produceCountry"
+                :rules="[rules.required]"
+                :error="error"
+              ></v-select>
+            </v-col>
+
           </v-form>
         </v-card-text>
         <v-divider></v-divider>
@@ -41,13 +52,23 @@
     </v-dialog>
     <v-dialog v-model="editDialog" max-width="500px">
       <v-card>
-        <v-card-title>
-          <span class="text-h5">Edit Brand</span>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          Edit Brand
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-text-field v-model="brand.brandName" label="Brand name"></v-text-field>
-            <v-text-field v-model="brand.produceCountry" label="Produce Country"></v-text-field>
+            <v-col cols="12" sm="6" md="4">
+              <v-select
+                :items="countries"
+                label="Produce Country"
+                item-text="name"
+                item-value="id"
+                v-model="brand.produceCountry"
+                :rules="[rules.required]"
+                :error="error"
+              ></v-select>
+            </v-col>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -66,6 +87,22 @@ import api from '../utils/api.js'
 export default {
   data() {
     return {
+
+      countries: [
+        {
+          name: "Japan",
+          id: "Japan"
+        },
+        {
+          name: "American",
+          id: "American"
+        },
+        {
+          name: "Germany",
+          id: "Germany"
+        },
+      ],
+
       editDialog: false,
       deleteDialog: false,
       selectDemo: {},
