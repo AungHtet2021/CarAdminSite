@@ -129,13 +129,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="saveCar">
-            <span v-if="!loading">Save</span>
-            <v-progress-circular
-              v-else
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
+          <v-btn color="primary" text @click="saveCar">Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -174,6 +168,7 @@ import api from "../utils/api.js";
 export default {
   data() {
     return {
+      localDomain: utils.constant.localDomain,
       showForm: false,
       status: [
         {
@@ -190,9 +185,9 @@ export default {
       categoryList: [],
       discountData: [],
       carForm: false,
-      loading: false,
       showResult: false,
       result: "",
+      tmpImagePath : "",
       newCar: {
         id: null,
         name: "",
@@ -320,9 +315,8 @@ export default {
 
     async saveCar() {
       if (this.$refs.carForm.validate()) {
-        // this.errorAlert = false;
-        this.loading = true;
         let respPosterData = null;
+        if (this.imageFile !== "") {
         const respPoster = await utils.http.postMedia(
           "/car/file/create",
           this.imageFile,
@@ -331,11 +325,15 @@ export default {
         if (respPoster.status === 200) {
           respPosterData = await respPoster.text();
         } else {
-          // this.errorAlert = true;
+
+        }
+        } else {
+          respPosterData = this.tmpImagePath;
         }
 
+        if (this.newCar.id == null) {
         if (respPosterData) {
-          const respMovie = await utils.http.post("/car/create", {
+          const respCar = await utils.http.post("/car/create", {
             name: this.newCar.name,
             brandId: this.newCar.brandId,
             categoryId: this.newCar.categoryId,
@@ -349,7 +347,7 @@ export default {
             imagePath: respPosterData,
             video: this.newCar.video
           });
-          if (respMovie.status === 200) {
+          if (respCar.status === 200) {
             this.newCar = {};
             this.imageName = "";
             this.imageFile = "";
@@ -357,18 +355,68 @@ export default {
             this.showForm = false;
             this.getAllCar();
           } else {
-            // this.errorAlert = true;
           }
         }
+        } else {
+        if (respPosterData) {
+          const respCar = await api.update("car/update/" +  + this.newCar.id, {
+            id : this.newCar.id,
+            name: this.newCar.name,
+            brandId: this.newCar.brandId,
+            categoryId: this.newCar.categoryId,
+            discountId: this.newCar.discountId,
+            status: this.newCar.status,
+            quantity: this.newCar.quantity,
+            price: this.newCar.price,
+            waitingTime: this.newCar.waitingTime,
+            isPublic: this.newCar.isPublic,
+            description: this.newCar.description,
+            imagePath: respPosterData,
+            video: this.newCar.video
+          });
+          if (respCar.status === 200) {
+            this.newCar = {};
+            this.imageName = "";
+            this.imageFile = "";
+            this.imageUrl = "";
+            this.showForm = false;
+            this.getAllCar();
+          } else {
+          }
+        }
+        }
 
-        this.loading = false;
       } else {
         this.result = "Please check required fields";
         this.showResult = true;
       }
     },
 
-    async edit(props) {},
+    async edit(props) {
+      const resp = await api.get("car/" + props.item.id);
+      if (resp) {
+        const data = await resp.json();
+        if (data) {
+          this.newCar.id = data.id;
+          this.newCar.name = data.name;
+          this.newCar.brandId = data.brandId;
+          this.newCar.categoryId = data.categoryId;
+          this.newCar.discountId = data.discountId;
+          this.newCar.status = data.status;
+          this.newCar.quantity = data.quantity;
+          this.newCar.price = data.price;
+          this.newCar.waitingTime = data.waitingTime;
+          this.newCar.isPublic = data.isPublic;
+          this.newCar.video = data.video;
+          this.newCar.description = data.description;
+          this.imageUrl = this.localDomain + '/car' + data.imagePath;
+          this.tmpImagePath = data.imagePath,
+          this.showForm = true;
+        }
+      } else {
+        console.log("something wrong");
+      }
+    },
 
     async deleteItem(props) {}
   },
