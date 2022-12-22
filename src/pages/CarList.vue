@@ -21,7 +21,7 @@
               <v-select
                 :items="brandList"
                 label="Brand"
-                item-text="name"
+                item-text="brandName"
                 item-value="id"
                 v-model="newCar.brandId"
                 :rules="[rules.required]"
@@ -32,10 +32,20 @@
               <v-select
                 :items="categoryList"
                 label="Category"
-                item-text="name"
+                item-text="categoryName"
                 item-value="id"
                 v-model="newCar.categoryId"
                 :rules="[rules.required]"
+              ></v-select>
+            </v-col>
+
+            <v-col cols="12" sm="6" md="4">
+              <v-select
+                :items="discountData"
+                label="Discount"
+                item-text="discountName"
+                item-value="id"
+                v-model="newCar.discountId"
               ></v-select>
             </v-col>
 
@@ -133,15 +143,22 @@
     <v-data-table
       class="table"
       :headers="headers"
-      :items="users"
+      :items="cars"
       :rows-per-page-items="[10, 25]"
     >
       <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.item.name }}</td>
-        <td class="text-xs-left">{{ props.item.carType }}</td>
+        <td class="text-xs-left" v-if="props.item.status == 1">Brand New</td>
+        <td class="text-xs-left" v-if="props.item.status == 2">Used</td>
         <td class="text-xs-left">{{ props.item.quantity }}</td>
         <td class="text-xs-left">{{ props.item.waitingTime }}</td>
         <td class="text-xs-left">{{ props.item.isPublic }}</td>
+        <td class="text-xs-left">
+          <v-icon class="edit" small @click="edit(props)">edit</v-icon>
+          <v-icon class="delete" small @click="deleteItem(props)"
+            >delete</v-icon
+          >
+        </td>
         <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
       </template>
     </v-data-table>
@@ -153,7 +170,7 @@
 
 <script>
 import utils from "../utils/utils";
-import api from '../utils/api.js'
+import api from "../utils/api.js";
 export default {
   data() {
     return {
@@ -169,27 +186,9 @@ export default {
         }
       ],
 
-      brandList: [
-        {
-          name: "Brand New",
-          id: 1
-        },
-        {
-          name: "Used",
-          id: 2
-        }
-      ],
-
-      categoryList: [
-        {
-          name: "Brand New",
-          id: 1
-        },
-        {
-          name: "Used",
-          id: 2
-        }
-      ],
+      brandList: [],
+      categoryList: [],
+      discountData: [],
       carForm: false,
       loading: false,
       showResult: false,
@@ -199,6 +198,7 @@ export default {
         name: "",
         brandId: null,
         categoryId: null,
+        discountId: null,
         description: "",
         isPublic: false,
         price: null,
@@ -215,7 +215,7 @@ export default {
       imageUrl: "",
       imageFile: "",
       error: false,
-      users: [],
+      cars: [],
       headers: [
         {
           text: "Name",
@@ -246,21 +246,20 @@ export default {
           value: "isPublic",
           align: "left",
           sortable: true
-        }
+        },
+        { text: "Actions", value: "actions" }
       ]
     };
   },
 
   methods: {
-
     async getAllBrands() {
       const resp = await api.get("brand/get/brands");
       if (resp) {
         const data = await resp.json();
-        if (data) this.brands = data;
-      }
-      else {
-        console.log("something wrong")
+        if (data) this.brandList = data;
+      } else {
+        console.log("something wrong");
       }
     },
 
@@ -268,10 +267,29 @@ export default {
       const resp = await api.get("category/get/categorys");
       if (resp) {
         const data = await resp.json();
-        if (data) this.categorys = data;
+        if (data) this.categoryList = data;
+      } else {
+        console.log("something wrong");
       }
-      else {
-        console.log("something wrong")
+    },
+
+    async getAllDiscount() {
+      const resp = await api.get("discount/discountList");
+      if (resp) {
+        const data = await resp.json();
+        if (data) this.discountData = data;
+      } else {
+        console.log("something wrong");
+      }
+    },
+
+    async getAllCar() {
+      const resp = await api.get("car/carList");
+      if (resp) {
+        const data = await resp.json();
+        if (data) this.cars = data;
+      } else {
+        console.log("something wrong");
       }
     },
     // saveCar() {
@@ -302,34 +320,44 @@ export default {
 
     async saveCar() {
       if (this.$refs.carForm.validate()) {
-        this.errorAlert = false;
+        // this.errorAlert = false;
         this.loading = true;
         let respPosterData = null;
         const respPoster = await utils.http.postMedia(
-          "/admin/file/create",
+          "/car/file/create",
           this.imageFile,
           this.imageFile.type
         );
         if (respPoster.status === 200) {
           respPosterData = await respPoster.text();
         } else {
-          this.errorAlert = true;
+          // this.errorAlert = true;
         }
 
         if (respPosterData) {
           const respMovie = await utils.http.post("/car/create", {
-            title: this.title,
-            overview: this.overview,
-            budget: this.budget,
-            category: { id: this.category },
-            adult: this.adult,
-            posterPath: respPosterData,
-            trailerPath: respTrailerData
+            name: this.newCar.name,
+            brandId: this.newCar.brandId,
+            categoryId: this.newCar.categoryId,
+            discountId: this.newCar.discountId,
+            status: this.newCar.status,
+            quantity: this.newCar.quantity,
+            price: this.newCar.price,
+            waitingTime: this.newCar.waitingTime,
+            isPublic: this.newCar.isPublic,
+            description: this.newCar.description,
+            imagePath: respPosterData,
+            video: this.newCar.video
           });
           if (respMovie.status === 200) {
-            this.$router.push({ path: "/admin" });
+            this.newCar = {};
+            this.imageName = "";
+            this.imageFile = "";
+            this.imageUrl = "";
+            this.showForm = false;
+            this.getAllCar();
           } else {
-            this.errorAlert = true;
+            // this.errorAlert = true;
           }
         }
 
@@ -338,93 +366,18 @@ export default {
         this.result = "Please check required fields";
         this.showResult = true;
       }
-    }
+    },
+
+    async edit(props) {},
+
+    async deleteItem(props) {}
   },
 
   async created() {
-    // const vm = this;
-    // vm.users = [
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   },
-    //   {
-    //     name: "Landcruiser",
-    //     carType: "Brand New",
-    //     quantity: "2",
-    //     waitingTime: "3",
-    //     isPublic: true
-    //   }
-    // ];
-
     await this.getAllCategorys();
     await this.getAllBrands();
+    await this.getAllDiscount();
+    await this.getAllCar();
   }
 };
 </script>
@@ -444,5 +397,15 @@ export default {
 
 .lighten-2 {
   background-color: #e07001 !important;
+}
+
+.edit {
+  color: #ff9800 !important;
+  font-size: 20px !important;
+}
+
+.delete {
+  color: #f44336 !important;
+  font-size: 20px !important;
 }
 </style>
