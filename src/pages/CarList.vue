@@ -156,6 +156,20 @@
         <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
       </template>
     </v-data-table>
+    <v-dialog v-model="deleteDialog" width="450">
+      <v-card>
+        <v-card-title class="headline lighten-2"> Delete Confirm</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete {{ selectDemo.name }} ?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="warn" @click="deleteCar(selectDemo.id)"
+            >Delete</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
       {{ result }}
     </v-snackbar>
@@ -188,6 +202,8 @@ export default {
       showResult: false,
       result: "",
       tmpImagePath : "",
+      selectDemo: {},
+      deleteDialog: false,
       newCar: {
         id: null,
         name: "",
@@ -418,7 +434,20 @@ export default {
       }
     },
 
-    async deleteItem(props) {}
+    async deleteItem(props) {
+      this.deleteDialog = true;
+      this.selectDemo = props.item;
+    },
+
+    async deleteCar(id) {
+      const resp = await api.remove("car/delete/" + id);
+      if (resp.status == 200) {
+        this.deleteDialog = false;
+        await this.getAllCar();
+      } else {
+        console.log("sth wrong in delete id");
+      }
+    }
   },
 
   async created() {
