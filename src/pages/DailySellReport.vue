@@ -133,9 +133,9 @@ export default {
   background-color: transparent;
 }
 .excel {
-    background-color: #1976d2 ;
+  border-radius: 28px;
+    background-color: #00a602 ;
     align-items: center;
-    border-radius: 2px;
     height: 36px;
     font-size: 14px;
     font-weight: 500;
