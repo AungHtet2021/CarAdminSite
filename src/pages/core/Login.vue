@@ -13,19 +13,25 @@
                 <v-form>
                   <v-text-field
                     append-icon="person"
-                    name="login"
-                    label="Login"
+                    name="email"
+                    label="Email"
+                    required
                     type="text"
                     v-model="userEmail"
                     :error="error"
-                    :rules="[rules.required]"/>
+                    :rules="[(v) => !!v || 'Required',
+            (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',]"></v-text-field>
+          
                   <v-text-field
                     :type="hidePassword ? 'password' : 'text'"
                     :append-icon="hidePassword ? 'visibility_off' : 'visibility'"
                     name="password"
                     label="Password"
                     id="password"
-                    :rules="[rules.required]"
+                    :rules="[(v) => !!v || 'Required',
+            (v) =>
+              (v && v.length <= 10) ||
+              'Password must be less than 10 characters',]"
                     v-model="password"
                     :error="error"
                     @click:append="hidePassword = !hidePassword"/>
@@ -77,15 +83,17 @@ export default {
 
         return;
       }
-
-      if (vm.userEmail === vm.$root.userEmail && vm.password === vm.$root.userPassword) {
+      else {
+        vm.$router.push({ name: 'Dashboard' });
+      }
+     /* if (vm.userEmail === vm.$root.userEmail && vm.password === vm.$root.userPassword) {
         vm.$router.push({ name: 'Dashboard' });
       }
       else {
         vm.error = true;
         vm.result = "Email or Password is incorrect.";
         vm.showResult = true;
-      }
+      }*/
     }
   }
 }
