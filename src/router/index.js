@@ -15,6 +15,8 @@ import Mailbox from '../pages/Mailbox.vue';
 import Calendar from '../pages/Calendar.vue';
 import Login from '../pages/core/Login.vue';
 import Error from '../pages/core/Error.vue';
+import AdminUserList from '../pages/AdminUserList.vue';
+import AdminSetup from '../pages/AdminSetup.vue';
 
 
 
@@ -146,18 +148,46 @@ export default new Router({
         ]
       }
     },
+    {
+      path: '/admin-set-up',
+      name: 'AdminSetup',
+      component: AdminSetup,
+      meta: {
+        breadcrumb: [
+          { name: 'Setups' },
+          { name: 'adminsetup' }
+        ]
+      }
+    },
+    
 
     {
       path: '/daily-sell-report',
       name: 'DailySellReport',
       component: DailySellReport,
+     
       meta: {
         breadcrumb: [
           { name: 'Reports' },
           { name: 'Daily Sell Report' }
+         
         ]
       }
     },
+    {
+      path: '/admin-user-list',
+      name: 'AdminUserList',
+      component: AdminUserList,
+     
+      meta: {
+        breadcrumb: [
+          { name: 'Reports' },
+          { name: 'Admin User List' }
+         
+        ]
+      }
+    },
+    
 
 
     {

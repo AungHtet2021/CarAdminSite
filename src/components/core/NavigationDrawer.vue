@@ -52,6 +52,13 @@
             >{{ $t("car") }}</v-list-tile-title
           >
         </v-list-tile>
+        <v-list-tile @click="changeRoute('AdminSetup', 10)">
+          <v-list-tile-action> <v-icon>group</v-icon> </v-list-tile-action>
+          <v-list-tile-title
+            :class="[{ active: selectedIndex === 10}, 'item-title']"
+            >{{ $t("Adminsetup") }}</v-list-tile-title
+          >
+        </v-list-tile>
 
       </v-list-group>
 
@@ -65,8 +72,13 @@
           <v-list-tile-action> <v-icon>event_note</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 8 }, 'item-title']"
-            >{{ $t("Daily Sell Report") }}</v-list-tile-title
-          >
+            >{{ $t("Daily Sell Report") }}</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile @click="changeRoute('AdminUserList', 9)">
+          <v-list-tile-action> <v-icon>event_note</v-icon> </v-list-tile-action>
+          <v-list-tile-title
+            :class="[{ active: selectedIndex === 9}, 'item-title']"
+            >{{ $t("Admin User List") }}</v-list-tile-title>
         </v-list-tile>
       </v-list-group>
 
