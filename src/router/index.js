@@ -159,18 +159,18 @@ export default new Router({
         ]
       }
     },
-    
+
 
     {
       path: '/daily-sell-report',
       name: 'DailySellReport',
       component: DailySellReport,
-     
+
       meta: {
         breadcrumb: [
           { name: 'Reports' },
           { name: 'Daily Sell Report' }
-         
+
         ]
       }
     },
@@ -178,16 +178,16 @@ export default new Router({
       path: '/admin-user-list',
       name: 'AdminUserList',
       component: AdminUserList,
-     
+
       meta: {
         breadcrumb: [
           { name: 'Reports' },
           { name: 'Admin User List' }
-         
+
         ]
       }
     },
-    
+
 
 
     {

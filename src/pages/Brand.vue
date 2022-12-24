@@ -101,6 +101,10 @@ export default {
           name: "Germany",
           id: "Germany"
         },
+        {
+          name: "United Kingdom",
+          id: "UK"
+        },
       ],
 
       editDialog: false,

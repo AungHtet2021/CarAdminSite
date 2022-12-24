@@ -16,7 +16,7 @@
               :error="error"
               :rules="[rules.required]"
             />
-          
+
             <v-col cols="12" sm="6" md="4">
               <v-text-field
                 :items="email"
@@ -27,7 +27,7 @@
                 :rules="[rules.required]"
               ></v-text-field>
             </v-col>
-            
+
 
             <v-col cols="12" sm="6" md="4">
               <v-text-field
@@ -60,7 +60,7 @@
               ></v-text-field>
             </v-col>
 
-           
+
             <v-checkbox
               v-model="newAdmin.isPublic"
               :label="'IsPublic'"
@@ -71,7 +71,6 @@
               type="file"
               ref="image"
               accept="image/*"
-              @change="onFilePicked"
             />
 
             <v-img
@@ -146,7 +145,7 @@ export default {
     return {
       localDomain: utils.constant.localDomain,
       showForm: false,
-      
+
       status: [
         {
           name: "Super Admin",
@@ -177,7 +176,7 @@ export default {
         isPublic: false,
         role:null,
         imagePath: "",
-      
+
       },
       rules: {
         required: value => !!value || "Required."
@@ -240,7 +239,7 @@ export default {
       }
     },
 
-   
+
     },
     // saveCar() {
     //   const vm = this;
@@ -282,7 +281,7 @@ export default {
         } else {
 
         }
-       
+
         } else {
           respPosterData = this.tmpImagePath;
         }
@@ -352,11 +351,11 @@ export default {
 
     async deleteAdmin(id) {
       const resp = await api.remove("admin/delete/" + id);
-      
+
     },
     async created() {
     /*await this.getAllAdmin();*/
-    
+
   }
   };
 </script>
