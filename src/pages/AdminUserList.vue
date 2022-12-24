@@ -1,6 +1,6 @@
 <template>
     <div>
-     
+
       <v-data-table
         class="table"
         :headers="headers"
@@ -17,28 +17,28 @@
       </v-data-table>
     </div>
   </template>
-  
+
   <script>
   import VueExcelXlsx from "vue-excel-xlsx";
   import Vue from "vue";
-  
+
   Vue.use(VueExcelXlsx);
-  
+
   export default {
     data() {
       return {
-  
+
           columns : [
-                      
+
                       {
                           label: " Name",
                           field: "name",
-                         
+
                       },
                       {
                           label: "Password",
                           field: "password",
-                       
+
                       },
                       {
                           label: "Email",
@@ -53,23 +53,23 @@
                           field: "dateofbirht",
                       },
                   ],
-  
-  
+
+
         users: [],
         headers: [
-        
+
           {
             text: " Name",
             value: "name",
             align: "left",
             sortable: true
           },
-          {
-            text: "Password",
-            value: "password",
-            align: "left",
-            sortable: true
-          },
+          // {
+          //   text: "Password",
+          //   value: "password",
+          //   align: "left",
+          //   sortable: true
+          // },
           {
             text: "Email",
             value: "Email",
@@ -91,13 +91,13 @@
         ]
       };
     },
-  
+
     methods: {},
-  
-    
+
+
   };
   </script>
-  
+
   <style>
   .table {
     border-radius: 3px;
@@ -118,4 +118,3 @@
       min-width: 13%;
   }
   </style>
-  
