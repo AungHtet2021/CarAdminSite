@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="dialog" width="650">
-      <div slot="activator"><v-btn color="primary">Create Category</v-btn></div>
+      <div slot="activator"><v-btn class="lighten-2">Create Category</v-btn></div>
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
           Create Category
@@ -172,5 +172,9 @@ export default {
   border: 1px solid rgba(0, 0, 0, 0.125);
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
   background-color: transparent;
+}
+.lighten-2 {
+  border-radius: 28px;
+  background-color: #f25417 !important;
 }
 </style>

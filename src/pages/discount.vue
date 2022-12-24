@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="dialog" width="650">
-      <div slot="activator"><v-btn color="primary">Create Discount</v-btn></div>
+      <div slot="activator"><v-btn class="lighten-2">Create Discount</v-btn></div>
       <v-card>
         <v-card-title class="headline lighten-2" primary-title>
           Create Discount
@@ -244,7 +244,8 @@ export default {
   background-color: transparent;
 }
 .lighten-2 {
-  background-color: #e07001 !important;
+  border-radius: 28px;
+  background-color: #f25417 !important;
 }
 
 .edit {
