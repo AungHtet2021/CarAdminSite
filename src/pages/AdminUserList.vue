@@ -9,7 +9,7 @@
       >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.password }}</td>
+          <!-- <td class="text-xs-left">{{ props.item.password }}</td> -->
           <td class="text-xs-left">{{ props.item.email }}</td>
           <td class="text-xs-left">{{ props.item.phone }}</td>
           <td class="text-xs-left">{{ props.item.DateofBirth }}</td>
@@ -21,6 +21,7 @@
   <script>
   import VueExcelXlsx from "vue-excel-xlsx";
   import Vue from "vue";
+  import api from "../utils/api"
 
   Vue.use(VueExcelXlsx);
 
@@ -93,7 +94,27 @@
     },
 
     methods: {},
+    // async getAllBrands() {
+    //   const resp = await api.get("brand/get/brands");
+    //   if (resp) {
+    //     const data = await resp.json();
+    //     if (data) this.brands = data;
+    //   }
+    //   else {
+    //     console.log("something wrong")
+    //   }
+    // },
 
+    async getAllUser(){
+      const resp=await  api.get("user/get/users");
+      if(resp){
+        const data=await resp.json();
+        if(data) this.users=data;
+      }
+      else{
+        console.log("something wrong ");
+      }
+    }
 
   };
   </script>

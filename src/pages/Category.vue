@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-dialog v-model="dialog" width="650">
-      <div slot="activator"><v-btn color="primary">Create Category</v-btn></div>
+      <div slot="activator"><v-btn class="lighten-2">Create Category</v-btn></div>
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
+        <v-card-title class="headline lighten-2" primary-title>
           Create Category
         </v-card-title>
         <v-card-text>
@@ -23,28 +23,37 @@
       <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.item.categoryName }}</td>
         <td class="text-xs-left">
-          <v-icon small @click="deleteItem(props)">delete</v-icon>
-          <v-icon small @click="editCategory(props)">edit</v-icon>
+          <v-icon class="edit" small @click="editCategory(props)">edit</v-icon>
+          <v-icon class="delete" small @click="deleteItem(props)">delete</v-icon>
         </td>
       </template>
     </v-data-table>
-    <v-dialog v-model="deleteDialog" width="400">
+
+    <v-dialog v-model="deleteDialog" width="450">
       <v-card>
-        <v-card-title class="text-h5">Are you sure you want to delete this CAR Category?</v-card-title>
-        <v-card-text>Brand Name - {{ selectDemo.categoryName }}</v-card-text>
-        <v-btn @click="deleteCategory(selectDemo.id)">Delete</v-btn>
+        <v-card-title class="headline lighten-2"> Delete Confirm</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete {{ selectDemo.categoryName}} ?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="warn" @click="deleteCategory(selectDemo.id)"
+            >Delete</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog v-model="editDialog" max-width="500px">
       <v-card>
-        <v-card-title>
-          <span class="text-h5">Edit Brand</span>
+       <v-card-title class="headline lighten-2" primary-title>
+          Edit Category
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-text-field v-model="category.categoryName" label="Cateory name"></v-text-field>
           </v-container>
         </v-card-text>
+        <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="editSave(category.id)">
@@ -53,6 +62,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
       {{ result }}
     </v-snackbar>
@@ -172,5 +182,18 @@ export default {
   border: 1px solid rgba(0, 0, 0, 0.125);
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.21);
   background-color: transparent;
+}
+.lighten-2 {
+  border-radius: 28px;
+  background-color: #f25417 !important;
+}
+.edit {
+  color: #ff9800 !important;
+  font-size: 20px !important;
+}
+
+.delete {
+  color: #f44336 !important;
+  font-size: 20px !important;
 }
 </style>
