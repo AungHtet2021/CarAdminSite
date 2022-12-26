@@ -2,7 +2,7 @@
   <v-navigation-drawer v-model="toggle" fixed app>
     <v-toolbar flat dark :color="$root.themeColor" class="toolbar">
       <router-link :to="{ name: 'Dashboard' }">
-        <img src="static/logo.png" width="36px" />
+        <img src="./../../assets/Guru-Logo.png" width="36px" />
       </router-link>
       <router-link :to="{ name: 'Dashboard' }" class="text">
         Car GuRu
