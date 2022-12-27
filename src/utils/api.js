@@ -1,4 +1,4 @@
-const domain="http://localhost:8088/";
+const domain="http://localhost:8080/";
 
 async function get(path){
   const resp= await fetch(

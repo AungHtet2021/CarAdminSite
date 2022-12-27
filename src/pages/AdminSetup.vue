@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="showForm" max-width="650">
-      <div slot="activator"><v-btn color="primary" >Create Admin</v-btn></div>
+      <div slot="activator"><v-btn class="lighten-2">Create Admin</v-btn></div>
       <v-card>
         <v-card-title class="headline lighten-2" primary-title
           >Create Admin
@@ -89,7 +89,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="saveAdmin">Save
+          <v-btn color="primary" text @click="saveA">Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -146,7 +146,7 @@ export default {
       localDomain: utils.constant.localDomain,
       showForm: false,
 
-      status: [
+      role: [
         {
           name: "Super Admin",
           id: 1
@@ -238,36 +238,7 @@ export default {
         console.log("something wrong");
       }
     },
-
-
-    },
-    // saveCar() {
-    //   const vm = this;
-    //   vm.showForm = false;
-    // },
-
-    onFilePicked(e) {
-      const files = e.target.files;
-      if (files[0] !== undefined) {
-        this.imageName = files[0].name;
-        if (this.imageName.lastIndexOf(".") <= 0) {
-          return;
-        }
-        const fr = new FileReader();
-        fr.readAsDataURL(files[0]);
-        fr.addEventListener("load", () => {
-          this.imageUrl = fr.result;
-          this.imageFile = files[0]; // this is an image file that can be sent to server...
-          console.log(this.imageUrl), console.log(this.imageFile);
-        });
-      } else {
-        this.imageName = "";
-        this.imageFile = "";
-        this.imageUrl = "";
-      }
-    },
-
-    async saveAdmin() {
+      async saveA() {
       if (this.$refs.adminForm.validate()) {
         let respPosterData = null;
         if (this.imageFile !== "") {
@@ -276,12 +247,11 @@ export default {
           this.imageFile,
           this.imageFile.type
         );
-        if (respPoster.status === 200) {
+        if (respPoster.role === 200) {
           respPosterData = await respPoster.text();
         } else {
 
         }
-
         } else {
           respPosterData = this.tmpImagePath;
         }
@@ -292,12 +262,21 @@ export default {
             name: this.newAdmin.name,
             password: this.newAdmin.password,
             email: this.newAdmin.email,
-            role:this.newAdmin.role,
+            role: this.newAdmin.role,
             phone: this.newAdmin.phone,
             isPublic: this.newAdmin.isPublic,
             imagePath: respPosterData,
             video: this.newAdmin.video
           });
+          if (respCar.role === 200) {
+            this.newAdmin = {};
+            this.imageName = "";
+            this.imageFile = "";
+            this.imageUrl = "";
+            this.showForm = false;
+            this.getAllAdmin();
+          } else {
+          }
         }
         } else {
         if (respPosterData) {
@@ -306,21 +285,29 @@ export default {
             name: this.newAdmin.name,
             password: this.newAdmin.password,
             email: this.newAdmin.email,
-            role:this.newAdmin.role,
-            phone: this.newAdmin.phone,
+            role: this.newAdmin.role,
             isPublic: this.newAdmin.isPublic,
-            description: this.newAdmin.description,
             imagePath: respPosterData,
             video: this.newAdmin.video
           });
+          if (respCar.role === 200) {
+            this.newAdmin = {};
+            this.imageName = "";
+            this.imageFile = "";
+            this.imageUrl = "";
+            this.showForm = false;
+            this.getAllAdmin();
+          } else {
+          }
         }
         }
 
-      } else {
+     } else {
         this.result = "Please check required fields";
         this.showResult = true;
       }
-    },
+     },
+   
 
     async edit(props) {
       const resp = await api.get("admin/" + props.item.id);
@@ -335,7 +322,7 @@ export default {
           this.newAdmin.phone = data.phone;
           this.newAdmin.isPublic = data.isPublic;
           this.newAdmin.video = data.video;
-          this.imageUrl = this.localDomain + '/car' + data.imagePath;
+          this.imageUrl = this.localDomain + '/admin' + data.imagePath;
           this.tmpImagePath = data.imagePath,
           this.showForm = true;
         }
@@ -356,7 +343,38 @@ export default {
     async created() {
     /*await this.getAllAdmin();*/
 
-  }
+  },
+  onFilePicked(e) {
+      const files = e.target.files;
+      if (files[0] !== undefined) {
+        this.imageName = files[0].name;
+        if (this.imageName.lastIndexOf(".") <= 0) {
+          return;
+        }
+        const fr = new FileReader();
+        fr.readAsDataURL(files[0]);
+        fr.addEventListener("load", () => {
+          this.imageUrl = fr.result;
+          this.imageFile = files[0]; // this is an image file that can be sent to server...
+          console.log(this.imageUrl), console.log(this.imageFile);
+        });
+      } else {
+        this.imageName = "";
+        this.imageFile = "";
+        this.imageUrl = "";
+      }
+    },
+
+    },
+    // saveCar() {
+    //   const vm = this;
+    //   vm.showForm = false;
+    // },
+
+    
+    
+
+  
   };
 </script>
 
@@ -374,7 +392,8 @@ export default {
 }
 
 .lighten-2 {
-  background-color: #e07001 !important;
+  border-radius: 28px;
+  background-color: #f25417 !important;
 }
 
 .edit {
