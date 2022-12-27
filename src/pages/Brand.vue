@@ -3,8 +3,8 @@
     <v-dialog v-model="dialog" width="500px">
       <div slot="activator"><v-btn class="lighten-2">Create Brand</v-btn></div>
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          Create Brand
+        <v-card-title class="headline lighten-2" primary-title
+          >Create Brand
         </v-card-title>
         <v-card-text>
           <v-form>
@@ -37,22 +37,28 @@
         <td class="text-xs-left">{{ props.item.brandName }}</td>
         <td class="text-xs-left">{{ props.item.produceCountry }}</td>
         <td class="text-xs-left">
-          <v-icon small @click="deleteItem(props)">delete</v-icon>
-          <v-icon small @click="editBrand(props)">edit</v-icon>
+          <v-icon class="edit" small @click="editBrand(props)">edit</v-icon>
+          <v-icon class="delete" small @click="deleteItem(props)">delete</v-icon>
         </td>
       </template>
     </v-data-table>
     <v-dialog v-model="deleteDialog" width="450">
       <v-card>
-        <v-card-title class="text-h5">Are you sure you want to delete this CAR BRAND?</v-card-title>
-        <v-card-text>Brand Name - {{ selectDemo.brandName }}</v-card-text>
-        <v-card-text>Produce Country - {{ selectDemo.produceCountry }}</v-card-text>
-        <v-btn @click="deleteBrand(selectDemo.id)">Delete</v-btn>
+        <v-card-title class="headline lighten-2"> Delete Confirm</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete {{ selectDemo.brandName}} ?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="warn" @click="deleteBrand(selectDemo.id)"
+            >Delete</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog v-model="editDialog" max-width="500px">
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
+        <v-card-title class="headline lighten-2" primary-title>
           Edit Brand
         </v-card-title>
         <v-card-text>
@@ -216,5 +222,14 @@ export default {
 .lighten-2 {
   border-radius: 28px;
   background-color: #f25417 !important;
+}
+.edit {
+  color: #ff9800 !important;
+  font-size: 20px !important;
+}
+
+.delete {
+  color: #f44336 !important;
+  font-size: 20px !important;
 }
 </style>

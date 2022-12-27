@@ -1,6 +1,6 @@
 <template>
     <div>
-     
+
       <v-data-table
         class="table"
         :headers="headers"
@@ -9,7 +9,7 @@
       >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.password }}</td>
+          <!-- <td class="text-xs-left">{{ props.item.password }}</td> -->
           <td class="text-xs-left">{{ props.item.email }}</td>
           <td class="text-xs-left">{{ props.item.phone }}</td>
           <td class="text-xs-left">{{ props.item.DateofBirth }}</td>
@@ -17,28 +17,29 @@
       </v-data-table>
     </div>
   </template>
-  
+
   <script>
   import VueExcelXlsx from "vue-excel-xlsx";
   import Vue from "vue";
-  
+  import api from "../utils/api"
+
   Vue.use(VueExcelXlsx);
-  
+
   export default {
     data() {
       return {
-  
+
           columns : [
-                      
+
                       {
                           label: " Name",
                           field: "name",
-                         
+
                       },
                       {
                           label: "Password",
                           field: "password",
-                       
+
                       },
                       {
                           label: "Email",
@@ -53,23 +54,23 @@
                           field: "dateofbirht",
                       },
                   ],
-  
-  
+
+
         users: [],
         headers: [
-        
+
           {
             text: " Name",
             value: "name",
             align: "left",
             sortable: true
           },
-          {
-            text: "Password",
-            value: "password",
-            align: "left",
-            sortable: true
-          },
+          // {
+          //   text: "Password",
+          //   value: "password",
+          //   align: "left",
+          //   sortable: true
+          // },
           {
             text: "Email",
             value: "Email",
@@ -91,13 +92,33 @@
         ]
       };
     },
-  
+
     methods: {},
-  
-    
+    // async getAllBrands() {
+    //   const resp = await api.get("brand/get/brands");
+    //   if (resp) {
+    //     const data = await resp.json();
+    //     if (data) this.brands = data;
+    //   }
+    //   else {
+    //     console.log("something wrong")
+    //   }
+    // },
+
+    async getAllUser(){
+      const resp=await  api.get("user/get/users");
+      if(resp){
+        const data=await resp.json();
+        if(data) this.users=data;
+      }
+      else{
+        console.log("something wrong ");
+      }
+    }
+
   };
   </script>
-  
+
   <style>
   .table {
     border-radius: 3px;
@@ -118,4 +139,3 @@
       min-width: 13%;
   }
   </style>
-  

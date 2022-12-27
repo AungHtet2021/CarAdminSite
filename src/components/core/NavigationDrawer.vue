@@ -2,7 +2,7 @@
   <v-navigation-drawer v-model="toggle" fixed app>
     <v-toolbar flat dark :color="$root.themeColor" class="toolbar">
       <router-link :to="{ name: 'Dashboard' }">
-        <img src="static/logo.png" width="36px" />
+        <img src="./../../assets/Guru-Logo.png" width="36px" />
       </router-link>
       <router-link :to="{ name: 'Dashboard' }" class="text">
         Car GuRu
@@ -24,21 +24,21 @@
           }}</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="changeRoute('Brand', 4)">
-          <v-list-tile-action> <v-icon>group</v-icon> </v-list-tile-action>
+          <v-list-tile-action ><v-icon>fa-brands fa-bandcamp</v-icon></v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 4 }, 'item-title']"
             >{{ $t("brand") }}</v-list-tile-title
           >
         </v-list-tile>
         <v-list-tile @click="changeRoute('Category', 5)">
-          <v-list-tile-action> <v-icon>bar_chart</v-icon> </v-list-tile-action>
+          <v-list-tile-action> <v-icon>fa-brands fa-delicious</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 5 }, 'item-title']"
             >{{ $t("category") }}</v-list-tile-title
           >
         </v-list-tile>
         <v-list-tile @click="changeRoute('Discount', 6)">
-          <v-list-tile-action> <v-icon>perm_media</v-icon> </v-list-tile-action>
+          <v-list-tile-action> <v-icon>fa-solid fa-percent</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 6 }, 'item-title']"
             >{{ $t("discount") }}</v-list-tile-title
@@ -46,14 +46,14 @@
         </v-list-tile>
 
         <v-list-tile @click="changeRoute('Car', 7)">
-          <v-list-tile-action> <v-icon>perm_media</v-icon> </v-list-tile-action>
+          <v-list-tile-action> <v-icon>fa-solid fa-car</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 7 }, 'item-title']"
             >{{ $t("car") }}</v-list-tile-title
           >
         </v-list-tile>
         <v-list-tile @click="changeRoute('AdminSetup', 10)">
-          <v-list-tile-action> <v-icon>group</v-icon> </v-list-tile-action>
+          <v-list-tile-action> <v-icon>fa-solid fa-user</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 10}, 'item-title']"
             >{{ $t("Adminsetup") }}</v-list-tile-title
@@ -69,16 +69,16 @@
           }}</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="changeRoute('DailySellReport', 8)">
-          <v-list-tile-action> <v-icon>event_note</v-icon> </v-list-tile-action>
+          <v-list-tile-action> <v-icon>fa-solid fa-calendar</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 8 }, 'item-title']"
             >{{ $t("Daily Sell Report") }}</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="changeRoute('AdminUserList', 9)">
-          <v-list-tile-action> <v-icon>event_note</v-icon> </v-list-tile-action>
+          <v-list-tile-action> <v-icon>fa-solid fa-users</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 9}, 'item-title']"
-            >{{ $t("Admin User List") }}</v-list-tile-title>
+            >{{ $t("Admin User Lists") }}</v-list-tile-title>
         </v-list-tile>
       </v-list-group>
 
