@@ -2,22 +2,24 @@
   <div>
     <v-dialog v-model="dialog" width="650">
       <div slot="activator"><v-btn class="lighten-2">Create Category</v-btn></div>
-      <v-card>
+
+        <v-card>
         <v-card-title class="headline lighten-2" primary-title>
           Create Category
         </v-card-title>
-        <v-card-text>
-          <v-form>
-            <v-text-field name="categoryName" label="Category Name" type="text" v-model="category.categoryName"
-              :error="error" :rules="[rules.required]" />
-          </v-form>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" @click="save">Save</v-btn>
-        </v-card-actions>
+        <v-form ref="categoryForm" v-model="categoryForm">
+          <v-card-text>
+            <v-text-field name="categoryName" label="Category Name" type="text" v-model="category.categoryName" :error="error"
+              :rules="[rules.required]" />
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" @click="save">Save</v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
+
     </v-dialog>
     <v-data-table :headers="headers" :items="categorys" :items-per-page="7" class="elevation-1">
       <template slot="items" slot-scope="props">
@@ -75,6 +77,7 @@ import api from '../utils/api.js'
 export default {
   data() {
     return {
+      categoryForm:false,
       editDialog: false,
       deleteDialog: false,
       selectDemo: {},
@@ -123,7 +126,8 @@ export default {
       }
     },
     async save() {
-      const resp = await api.save("category/create",
+      if(this.$refs.categoryForm.validate()){
+        const resp = await api.save("category/create",
         {
           categoryName: this.category.categoryName,
         });
@@ -131,6 +135,7 @@ export default {
         this.category = {};
         this.getAllCategorys();
         this.dialog = false;
+      }
       }
     },
     randomAvatar() {

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-dialog v-model="showForm" max-width="650">
-      <div slot="activator"><v-btn color="primary" >Create Admin</v-btn></div>
+    <v-dialog v-model="showForm" max-width="650" @click:outside="closeDialog">
+      <div slot="activator"><v-btn color="lighten-2" >Create Admin</v-btn></div>
       <v-card>
         <v-card-title class="headline lighten-2" primary-title
           >Create Admin
@@ -19,15 +19,14 @@
 
             <v-col cols="12" sm="6" md="4">
               <v-text-field
-                :items="email"
+                :items="gmail"
                 label="Email"
-                item-text="email"
-                item-value="email"
-                v-model="newAdmin.email"
+                item-text="gmail"
+                item-value="gmail"
+                v-model="newAdmin.gmail"
                 :rules="[rules.required]"
               ></v-text-field>
             </v-col>
-
 
             <v-col cols="12" sm="6" md="4">
               <v-text-field
@@ -40,37 +39,22 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <v-text-field
-                :items="role"
+              <v-select
+                :items="status"
                 label="SuperAdmin/Admin"
                 item-text="name"
-                item-value="id"
-                v-model="newAdmin.role"
+                item-value="status"
+                v-model="newAdmin.adminRole"
                 :rules="[rules.required]"
-              ></v-text-field>
+              ></v-select>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field
-                :items="phone"
-                label="PhoneNo"
-                item-text="phone"
-                item-value="phone"
-                v-model="newAdmin.phone"
-                :rules="[rules.required]"
-              ></v-text-field>
-            </v-col>
-
-
-            <v-checkbox
-              v-model="newAdmin.isPublic"
-              :label="'IsPublic'"
-            ></v-checkbox>
 
             <label for="file">Admin Image</label> <br />
             <input
               type="file"
               ref="image"
               accept="image/*"
+              @change="onFilePicked"
             />
 
             <v-img
@@ -83,7 +67,6 @@
             >
             </v-img>
 
-
           </v-form>
         </v-card-text>
         <v-divider></v-divider>
@@ -94,27 +77,30 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <v-data-table
       class="table"
       :headers="headers"
-      :items="admin"
+      :items="data"
       :rows-per-page-items="[10, 25]"
     >
       <template slot="items" slot-scope="props">
+        <td> <v-img
+            :src="localDomain +'/admin'+ props.item.imagePath"
+            width="30"
+            height="30"
+            contain
+          ></v-img></td>
+
         <td class="text-xs-left">{{ props.item.name }}</td>
-        <td class="text-xs-left">{{ props.item.password }}</td>
-        <td class="text-xs-left">{{ props.item.email }}</td>
-        <td class="text-xs-left" v-if="props.item.role == 1">SuperAdmin</td>
-        <td class="text-xs-left" v-if="props.item.role == 2">Admin</td>
-        <td class="text-xs-left">{{ props.item.phone }}</td>
-        <td class="text-xs-left">{{ props.item.isPublic }}</td>
+        <td class="text-xs-left">{{ props.item.gmail }}</td>
+        <td class="text-xs-left">{{ props.item.adminRole }}</td>
         <td class="text-xs-left">
           <v-icon class="edit" small @click="edit(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)"
             >delete</v-icon
           >
         </td>
-        <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
       </template>
     </v-data-table>
     <v-dialog v-model="deleteDialog" width="450">
@@ -147,18 +133,19 @@ export default {
       showForm: false,
 
       status: [
-        {
-          name: "Super Admin",
-          id: 1
-        },
-        {
-          name: "Admin",
-          id: 2
-        }
+        "ADMIN","SUPERADMIN"
+        // {
+        //   name: "Super Admin",
+        //   id: 1
+        // },
+        // {
+        //   name: "Admin",
+        //   id: 2
+        // }
       ],
       role:[],
-      name: [],
-      email: [],
+      data: [],
+      gmail: [],
       password: [],
       phone:[],
       adminForm: false,
@@ -168,13 +155,12 @@ export default {
       selectDemo: {},
       deleteDialog: false,
       newAdmin: {
-        id: null,
+        // id: null,
         name: "",
-        email: null,
-        password: null,
-        phone:null,
-        isPublic: false,
-        role:null,
+        gmail: "",
+        password: "",
+        phone:"",
+        adminRole:"",
         imagePath: "",
 
       },
@@ -188,64 +174,48 @@ export default {
       admin: [],
       headers: [
         {
+          text: "Photo",
+          value: "imagePath",
+          align: "left",
+          sortable: true
+        },
+        {
           text: "Name",
           value: "name",
           align: "left",
           sortable: true
         },
         {
-          text: "Email",
-          value: "email",
-          align: "left",
-          sortable: true
-        },
-        {
-          text: "Password",
-          value: "password",
+          text: "Gmail",
+          value: "gmail",
           align: "left",
           sortable: true
         },
         {
           text: "SuperAdmin/Admin",
-          value: "adminType",
+          value: "adminRole",
           align: "left",
           sortable: true
         },
-        {
-          text: "PhoneNO",
-          value: "phone",
-          align: "left",
-          sortable: true
-        },
-        {
-          text: "IsPublic",
-          value: "isPublic",
-          align: "left",
-          sortable: true
-        },
-        { text: "Actions", value: "actions" }
       ]
     };
   },
+  async created() {
+    await this.getAllAdmin();
 
+  },
   methods: {
+
     async getAllAdmin() {
       const resp = await api.get("admin/get/admins");
       if (resp) {
         const data = await resp.json();
-        if (data) this.name = data;
+        if (data) this.data = data;
+
       } else {
         console.log("something wrong");
       }
     },
-
-
-    },
-    // saveCar() {
-    //   const vm = this;
-    //   vm.showForm = false;
-    // },
-
     onFilePicked(e) {
       const files = e.target.files;
       if (files[0] !== undefined) {
@@ -276,8 +246,11 @@ export default {
           this.imageFile,
           this.imageFile.type
         );
+        console.log("working")
         if (respPoster.status === 200) {
           respPosterData = await respPoster.text();
+          console.log(respPosterData);
+
         } else {
 
         }
@@ -288,31 +261,43 @@ export default {
 
         if (this.newAdmin.id == null) {
         if (respPosterData) {
-          const respCar = await utils.http.post("/admin/create", {
+          const resp = await utils.http.post("/admin/create", {
             name: this.newAdmin.name,
             password: this.newAdmin.password,
-            email: this.newAdmin.email,
-            role:this.newAdmin.role,
-            phone: this.newAdmin.phone,
-            isPublic: this.newAdmin.isPublic,
+            gmail: this.newAdmin.gmail,
+            adminRole:this.newAdmin.adminRole,
             imagePath: respPosterData,
-            video: this.newAdmin.video
+            // video: this.newAdmin.video
           });
+          if(resp.status==200){
+              console.log(resp)
+              this.adminForm=false;
+              this.$router.push({ path: "/" });
+            }else{
+              console.log("error")
+            }
         }
-        } else {
+        }
+        else {
         if (respPosterData) {
-          const respCar = await api.update("admin/update/" +  + this.newAdmin.id, {
+          console.log(this.newAdmin.adminRole)
+          const respCar = await api.update("admin/admin/update/" +  + this.newAdmin.id, {
             id : this.newAdmin.id,
             name: this.newAdmin.name,
             password: this.newAdmin.password,
-            email: this.newAdmin.email,
-            role:this.newAdmin.role,
-            phone: this.newAdmin.phone,
-            isPublic: this.newAdmin.isPublic,
-            description: this.newAdmin.description,
+            gmail: this.newAdmin.gmail,
+            adminRole:this.newAdmin.adminRole,
             imagePath: respPosterData,
-            video: this.newAdmin.video
           });
+          if (respCar.status === 200) {
+            this.newAdmin = {};
+            this.imageName = "";
+            this.imageFile = "";
+            this.imageUrl = "";
+            this.showForm = false;
+            this.getAllAdmin();
+          } else {
+          }
         }
         }
 
@@ -322,28 +307,29 @@ export default {
       }
     },
 
+
+
     async edit(props) {
-      const resp = await api.get("admin/" + props.item.id);
+      this.showForm = true;
+      const resp = await api.get("admin/get/admin/" + props.item.id);
       if (resp) {
+        console.log(resp)
         const data = await resp.json();
         if (data) {
-          this.newAdmin.id = data.id;
-          this.newAdmin.name = data.name;
-          this.newAdmin.password = data.password;
-          this.newAdmin.email = data.email;
-          this.newAdmin.role=data.role;
-          this.newAdmin.phone = data.phone;
-          this.newAdmin.isPublic = data.isPublic;
-          this.newAdmin.video = data.video;
-          this.imageUrl = this.localDomain + '/car' + data.imagePath;
-          this.tmpImagePath = data.imagePath,
-          this.showForm = true;
+          this.newAdmin.id=data.id;
+          this.newAdmin.name=data.name;
+          this.newAdmin.gmail=data.gmail;
+          this.newAdmin.password=data.password;
+          this.newAdmin.adminRole=data.adminRole;
+          this.newAdmin.imagePath=data.imagePath;
+          this.imageUrl = this.localDomain + '/admin' + data.imagePath;
+          this.tmpImagePath = data.imagePath;
         }
-      } else {
-        console.log("something wrong");
+      }
+      else {
+        console.log("something wrong")
       }
     },
-
     async deleteItem(props) {
       this.deleteDialog = true;
       this.selectDemo = props.item;
@@ -351,12 +337,16 @@ export default {
 
     async deleteAdmin(id) {
       const resp = await api.remove("admin/delete/" + id);
-
+      if(resp.status==200){
+        this.deleteDialog=false;
+        await this.getAllAdmin();
+      }
     },
-    async created() {
-    /*await this.getAllAdmin();*/
-
-  }
+  },
+  // saveCar() {
+  //   const vm = this;
+  //   vm.showForm = false;
+  // },
   };
 </script>
 
@@ -374,7 +364,8 @@ export default {
 }
 
 .lighten-2 {
-  background-color: #e07001 !important;
+  border-radius: 28px;
+  background-color: #f25417 !important;
 }
 
 .edit {
@@ -385,5 +376,11 @@ export default {
 .delete {
   color: #f44336 !important;
   font-size: 20px !important;
+}
+.img {
+  border-radius: 5%;
+  margin-left: 0px;
+  width: 100px;
+  height: 100px;
 }
 </style>

@@ -92,7 +92,7 @@
               :label="'IsPublic'"
             ></v-checkbox>
 
-            <label for="file">Car Image</label> <br />
+            <label for="file">Car Image</label> <br/>
             <input
               type="file"
               ref="image"

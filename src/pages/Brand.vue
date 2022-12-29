@@ -7,7 +7,7 @@
           >Create Brand
         </v-card-title>
         <v-card-text>
-          <v-form>
+          <v-form ref="brandFrom" v-model="brandFrom">
             <v-text-field name="brandName" label="Brand Name" type="text" v-model="newList.brandName" :error="error"
               :rules="[rules.required]" />
 
@@ -112,7 +112,7 @@ export default {
           id: "UK"
         },
       ],
-
+      brandFrom:false,
       editDialog: false,
       deleteDialog: false,
       selectDemo: {},
@@ -174,7 +174,8 @@ export default {
       }
     },
     async save() {
-      const resp = await api.save("brand/create",
+      if(this.$refs.brandFrom.validate()){
+        const resp = await api.save("brand/create",
         {
           brandName: this.newList.brandName,
           produceCountry: this.newList.produceCountry,
@@ -183,6 +184,7 @@ export default {
         this.newList = {};
         this.getAllBrands();
         this.dialog = false;
+      }
       }
     },
     async editBrand(props) {
