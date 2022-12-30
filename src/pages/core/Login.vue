@@ -7,7 +7,7 @@
             <v-card class="elevation-1 pa-3">
               <v-card-text>
                 <div class="layout column align-center">
-                  <img src="static/logo.png" alt="Vue Material Admin" width="180" height="180">
+                  <img src="./../../assets/Guru-Logo.png" alt="Vue Material Admin" width="180" height="180">
                   <h1 class="flex my-4 primary--text">Car GuRu</h1>
                 </div>
                 <v-form>
@@ -21,7 +21,7 @@
                     :error="error"
                     :rules="[(v) => !!v || 'Required',
             (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',]"></v-text-field>
-          
+
                   <v-text-field
                     :type="hidePassword ? 'password' : 'text'"
                     :append-icon="hidePassword ? 'visibility_off' : 'visibility'"

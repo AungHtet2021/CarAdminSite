@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="showForm" max-width="650" @click:outside="closeDialog">
+    <v-dialog v-model="showForm" max-width="650" >
       <div slot="activator"><v-btn color="lighten-2" >Create Admin</v-btn></div>
       <v-card>
         <v-card-title class="headline lighten-2" primary-title
@@ -254,7 +254,6 @@ export default {
         } else {
 
         }
-
         } else {
           respPosterData = this.tmpImagePath;
         }
@@ -301,13 +300,11 @@ export default {
         }
         }
 
-      } else {
+     } else {
         this.result = "Please check required fields";
         this.showResult = true;
       }
-    },
-
-
+     },
 
     async edit(props) {
       this.showForm = true;
