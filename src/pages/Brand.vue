@@ -28,7 +28,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="save">Save</v-btn>
+          <v-btn color="primary" text @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -82,9 +82,16 @@
           <v-btn color="blue darken-1" text @click="editSave(brand.id)">
             editSave
           </v-btn>
+
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar color="red" v-model="showError" :timeout="2000" top>
+      {{ error }}
+    </v-snackbar>
+    <v-snackbar color="green" v-model="showResult" :timeout="2000" top>
+      {{ result }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -93,7 +100,10 @@ import api from '../utils/api.js'
 export default {
   data() {
     return {
-
+      showResult:false,
+      result:"",
+      showError:false,
+      error:"",
       countries: [
         {
           name: "Japan",
@@ -181,10 +191,15 @@ export default {
           produceCountry: this.newList.produceCountry,
         });
       if (resp) {
+        this.result="Successfully Save Brand!";
+        this.showResult=true;
         this.newList = {};
         this.getAllBrands();
         this.dialog = false;
       }
+      }else{
+        this.error = "Please check required fields";
+        this.showError = true;
       }
     },
     async editBrand(props) {

@@ -89,7 +89,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
+    <v-snackbar color="red" v-model="showError" :timeout="2000" top>
+      {{ error }}
+    </v-snackbar>
+    <v-snackbar color="success" v-model="showResult" :timeout="2000" top>
       {{ result }}
     </v-snackbar>
   </div>
@@ -112,6 +115,8 @@ export default {
       hidePassword: true,
       error: false,
       showResult: false,
+      showError:false,
+      error:"",
       deleteDialog: false,
       result: "",
       rules: {
@@ -171,6 +176,8 @@ export default {
             toDate: this.discount.toDate
           });
           if (resp) {
+            this.showResult=true;
+            this.result="Successfully save Discount!"
             this.discount = {};
             this.getAllDiscount();
             this.dialog = false;
@@ -190,8 +197,8 @@ export default {
           }
         }
       } else {
-        this.result = "Please check required fields";
-        this.showResult = true;
+        this.error = "Please check required fields";
+        this.showError = true;
         return;
       }
     },

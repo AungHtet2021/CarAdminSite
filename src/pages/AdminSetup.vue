@@ -117,7 +117,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
+    <v-snackbar color="red" v-model="showError" :timeout="2000" top>
+      {{ error }}
+    </v-snackbar>
+    <v-snackbar color="success" v-model="showResult" :timeout="2000" top>
       {{ result }}
     </v-snackbar>
   </div>
@@ -149,6 +152,8 @@ export default {
       password: [],
       phone:[],
       adminForm: false,
+      showError:false,
+      error:"",
       showResult: false,
       result: "",
       tmpImagePath : "",
@@ -269,9 +274,13 @@ export default {
             // video: this.newAdmin.video
           });
           if(resp.status==200){
-              console.log(resp)
-              this.adminForm=false;
-              this.$router.push({ path: "/" });
+              // console.log(resp)
+              this.newAdmin={};
+              this.showResult=true;
+              this.result="Successfully save Admin!"
+              this.showForm=false;
+              this.getAllAdmin();
+              // this.$router.push({ path: "/" });
             }else{
               console.log("error")
             }
@@ -301,8 +310,8 @@ export default {
         }
 
      } else {
-        this.result = "Please check required fields";
-        this.showResult = true;
+        this.error= "Please check required fields";
+        this.showError = true;
       }
      },
 

@@ -60,6 +60,14 @@
           >
         </v-list-tile>
 
+        <v-list-tile @click="changeRoute('TestDrive', 11)">
+          <v-list-tile-action> <v-icon>fa-solid fa-car</v-icon> </v-list-tile-action>
+          <v-list-tile-title
+            :class="[{ active: selectedIndex === 11}, 'item-title']"
+            >{{ $t("TestDrive") }}</v-list-tile-title
+          >
+        </v-list-tile>
+
       </v-list-group>
 
       <v-list-group prepend-icon="select_all">

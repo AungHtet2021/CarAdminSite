@@ -17,6 +17,7 @@ import Login from '../pages/core/Login.vue';
 import Error from '../pages/core/Error.vue';
 import AdminUserList from '../pages/AdminUserList.vue';
 import AdminSetup from '../pages/AdminSetup.vue';
+import TestDrive from '../pages/TestDrive.vue';
 
 
 
@@ -159,7 +160,17 @@ export default new Router({
         ]
       }
     },
-
+    {
+      path: '/test-dirve',
+      name: 'TestDrive',
+      component: TestDrive,
+      meta: {
+        breadcrumb: [
+          { name: 'Setups' },
+          { name: 'TestDrive' }
+        ]
+      }
+    },
 
     {
       path: '/daily-sell-report',

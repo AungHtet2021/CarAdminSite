@@ -64,8 +64,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
+    <v-snackbar color="red" v-model="showError" :timeout="2000" top>
+      {{ error }}
+    </v-snackbar>
+    <v-snackbar color="green" v-model="showResult" :timeout="2000" top>
       {{ result }}
     </v-snackbar>
   </div>
@@ -77,6 +79,10 @@ import api from '../utils/api.js'
 export default {
   data() {
     return {
+      showResult:false,
+      showError:false,
+      error:"",
+      result:"",
       categoryForm:false,
       editDialog: false,
       deleteDialog: false,
@@ -132,10 +138,15 @@ export default {
           categoryName: this.category.categoryName,
         });
       if (resp) {
+        this.showResult=true;
+        this.result="Successfully save Category!";
         this.category = {};
         this.getAllCategorys();
         this.dialog = false;
       }
+      }else{
+        this.showError=true;
+        this.error="Please check required fields";
       }
     },
     randomAvatar() {

@@ -92,6 +92,11 @@
               :label="'IsPublic'"
             ></v-checkbox>
 
+            <v-checkbox
+              v-model="newCar.availableTestDrive"
+              :label="'AvailableTestDrive'"
+            ></v-checkbox>
+
             <label for="file">Car Image</label> <br/>
             <input
               type="file"
@@ -147,6 +152,7 @@
         <td class="text-xs-left">{{ props.item.quantity }}</td>
         <td class="text-xs-left">{{ props.item.waitingTime }}</td>
         <td class="text-xs-left">{{ props.item.isPublic }}</td>
+        <td class="text-xs-left">{{ props.item.availableTestDrive }}</td>
         <td class="text-xs-left">
           <v-icon class="edit" small @click="edit(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)"
@@ -170,7 +176,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar color="red" v-model="showResult" :timeout="2000" top>
+    <v-snackbar color="red" v-model="showError" :timeout="2000" top>
+      {{ error }}
+    </v-snackbar>
+    <v-snackbar color="success" v-model="showResult" :timeout="2000" top>
       {{ result }}
     </v-snackbar>
   </div>
@@ -199,6 +208,8 @@ export default {
       categoryList: [],
       discountData: [],
       carForm: false,
+      showError:false,
+      error:"",
       showResult: false,
       result: "",
       tmpImagePath : "",
@@ -212,6 +223,7 @@ export default {
         discountId: null,
         description: "",
         isPublic: false,
+        availableTestDrive:false,
         price: null,
         waitingTime: null,
         quantity: null,
@@ -258,7 +270,13 @@ export default {
           align: "left",
           sortable: true
         },
-        { text: "Actions", value: "actions" }
+        {
+          text: "AvailableTestDrive",
+          value: "availableTestDrive",
+          align: "left",
+          sortable: true
+        },
+        { text: "Actions", value: "actions" },
       ]
     };
   },
@@ -339,6 +357,8 @@ export default {
           this.imageFile.type
         );
         if (respPoster.status === 200) {
+          this.showResult=true;
+          this.result="Successfully save Car!"
           respPosterData = await respPoster.text();
         } else {
 
@@ -359,6 +379,7 @@ export default {
             price: this.newCar.price,
             waitingTime: this.newCar.waitingTime,
             isPublic: this.newCar.isPublic,
+            availableTestDrive:this.newCar.availableTestDrive,
             description: this.newCar.description,
             imagePath: respPosterData,
             video: this.newCar.video
@@ -386,6 +407,7 @@ export default {
             price: this.newCar.price,
             waitingTime: this.newCar.waitingTime,
             isPublic: this.newCar.isPublic,
+            availableTestDrive:this.newCar.availableTestDrive,
             description: this.newCar.description,
             imagePath: respPosterData,
             video: this.newCar.video
@@ -403,8 +425,8 @@ export default {
         }
 
       } else {
-        this.result = "Please check required fields";
-        this.showResult = true;
+        this.error = "Please check required fields";
+        this.showError = true;
       }
     },
 
