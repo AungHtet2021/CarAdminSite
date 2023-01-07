@@ -25,7 +25,7 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
       meta: {
@@ -191,7 +191,7 @@ export default new Router({
 
 
     {
-      path: '/login',
+      path: '/',
       name: 'Login',
       component: Login,
       meta: {

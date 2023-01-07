@@ -60,8 +60,8 @@ export default {
   data() {
     return {
       loading: false,
-      userEmail: 'admin@yopmail.com',
-      password: '123456',
+      userEmail: '',
+      password: '',
       hidePassword: true,
       error: false,
       showResult: false,
