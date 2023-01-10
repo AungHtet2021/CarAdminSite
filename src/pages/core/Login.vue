@@ -84,6 +84,7 @@ export default {
         return;
       }
       else {
+        console.log('login')
         vm.$router.push({ name: 'Dashboard' });
       }
      /* if (vm.userEmail === vm.$root.userEmail && vm.password === vm.$root.userPassword) {

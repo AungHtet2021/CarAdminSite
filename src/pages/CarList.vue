@@ -445,6 +445,7 @@ export default {
           this.newCar.price = data.price;
           this.newCar.waitingTime = data.waitingTime;
           this.newCar.isPublic = data.isPublic;
+          this.newCar.availableTestDrive=data.availableTestDrive;
           this.newCar.video = data.video;
           this.newCar.description = data.description;
           this.imageUrl = this.localDomain + '/car' + data.imagePath;
