@@ -9,7 +9,7 @@
         <widget icon="domain" :title= toDayRegistrationCount :supTitle="$t('widgetTodaysRegistraion')" color="#00b297"/>
       </v-flex>
       <v-flex d-flex lg4 sm6 xs12>
-        <widget icon="computer" title="33" :supTitle="$t('widgetTodaysOrder')" color="#0866C6"/>
+        <widget icon="computer" :title= toDayOrderCount  :supTitle="$t('widgetTodaysOrder')" color="#0866C6"/>
       </v-flex>
       <!-- Widgets Ends -->
       <!-- Statistics -->
@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       toDayRegistrationCount : 0,
+      toDayOrderCount : 0,
       todayDate : '',
       from : '',
       to: '',
@@ -60,9 +61,11 @@ export default {
     const month = + current.getMonth()+ 1;
     const year = + current.getFullYear();
     this.todayDate = year+ '-' + month + '-' + date
+    console.log(this.todayDate)
     // this.from = todayDate + ' ' + '00:00:00';
     // this.to = todayDate + ' ' + '23:59:59';
     await this.getToDayRegistration();
+    await this.getToDayOrder();
   },
 
   methods: {
@@ -76,6 +79,18 @@ export default {
         console.log("something wrong");
       }
     },
+
+    async getToDayOrder(){
+      const resp=await utils.http.get("/order/getToDayOrder/" + this.todayDate);
+      if(resp){
+        const data=await resp.json();
+        this.toDayOrderCount=data.length;
+        console.log(data.length)
+      }else{
+        console.log("something wrong")
+      }
+    }
+
   }
 }
 </script>

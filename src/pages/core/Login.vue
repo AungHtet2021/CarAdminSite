@@ -17,7 +17,7 @@
                     label="Email"
                     required
                     type="text"
-                    v-model="userEmail"
+                    v-model="adminEmail"
                     :error="error"
                     :rules="[(v) => !!v || 'Required',
             (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',]"></v-text-field>
@@ -56,11 +56,13 @@
 </template>
 
 <script>
+import utils from '../../utils/utils';
+
 export default {
   data() {
     return {
       loading: false,
-      userEmail: '',
+      adminEmail: '',
       password: '',
       hidePassword: true,
       error: false,
@@ -73,29 +75,48 @@ export default {
   },
 
   methods: {
-    login() {
-      const vm = this;
+    // login() {
+    //   const vm = this;
+    //   utils
 
-      if (!vm.userEmail || !vm.password) {
+    //   if (!vm.adminEmail || !vm.password) {
 
-        vm.result = "Email and Password can't be null.";
-        vm.showResult = true;
+    //     vm.result = "Email and Password can't be null.";
+    //     vm.showResult = true;
 
-        return;
-      }
-      else {
-        console.log('login')
-        vm.$router.push({ name: 'Dashboard' });
-      }
-     /* if (vm.userEmail === vm.$root.userEmail && vm.password === vm.$root.userPassword) {
-        vm.$router.push({ name: 'Dashboard' });
-      }
-      else {
-        vm.error = true;
-        vm.result = "Email or Password is incorrect.";
-        vm.showResult = true;
-      }*/
-    }
+    //     return;
+    //   }
+    //   else {
+    //     console.log('login')
+    //     vm.$router.push({ name: 'Dashboard' });
+    //   }
+    //  /* if (vm.userEmail === vm.$root.userEmail && vm.password === vm.$root.userPassword) {
+    //     vm.$router.push({ name: 'Dashboard' });
+    //   }
+    //   else {
+    //     vm.error = true;
+    //     vm.result = "Email or Password is incorrect.";
+    //     vm.showResult = true;
+    //   }*/
+    // },
+    async login() {
+            if (true) {
+                const resp = await utils.http.post("/admin/login", {
+                    gmail: this.adminEmail,
+                    password: this.password,
+                });
+                if (resp.status == 200) {
+                  console.log(resp)
+                    const data = await resp.json();
+
+
+                    this.$router.push({ path: "/dashboard" });
+                }
+                else {
+                    alert("Invalid Gmail Or Password");
+                }
+            }
+        },
   }
 }
 </script>
