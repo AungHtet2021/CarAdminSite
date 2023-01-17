@@ -23,5 +23,8 @@
   "widgetHigherYesterday": "{0} higher yesterday",
   "widgetBeforeTax": "{0} before tax",
   "widgetAverageDuration": "{0} average duration",
-  "widgetAverageTime": "{0}  on average time"
+  "widgetAverageTime": "{0}  on average time",
+  "widgetTodaysOrder": " Today's Order",
+  "widgetTodaysRegistraion" :"Today's Registration",
+  "widgetTodaysTotalAmount" :"Today Selling Amount"
 }
