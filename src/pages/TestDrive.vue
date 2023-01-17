@@ -149,13 +149,13 @@ export default {
     },
 
     reject(id) {
-      tmp = this.message;
+      // tmp = this.message;
       Email.send({
         SecureToken: "79888d3d-3cbf-44ca-a4dd-8bb6076f3c01",
-        To: selectedEmail,
+        To: this.selectedEmail,
         From: "khantminthu199666@gmail.com",
         Subject: "Test Drive Request Notification",
-        Body: tmp
+        Body: this.message
       }).then(message => alert(message + "Please Check Your Email"));
       this.rejectDialog = false;
     },

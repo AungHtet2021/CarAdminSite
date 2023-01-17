@@ -413,6 +413,7 @@ export default {
             video: this.newCar.video
           });
           if (respCar.status === 200) {
+            console.log(respCar)
             this.newCar = {};
             this.imageName = "";
             this.imageFile = "";

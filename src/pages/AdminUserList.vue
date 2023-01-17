@@ -86,8 +86,8 @@
       <template slot="items" slot-scope="props">
         <td> <v-img
             :src="localDomain +'/user'+ props.item.imagePath"
-            width="30"
-            height="30"
+            width="80"
+            height="80"
             contain
           ></v-img></td>
         <td class="text-xs-left">{{ props.item.name }}</td>
