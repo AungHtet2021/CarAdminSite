@@ -241,6 +241,8 @@ export default {
     const level = JSON.parse(localStorage.getItem("adminLevel"));
     if (level.adminRole == 'ADMIN') {
       this.isSuperAdmin = false;
+    } else {
+      this.isSuperAdmin = true;
     }
     await this.getAllDiscount();
   }

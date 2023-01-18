@@ -205,7 +205,7 @@
     <v-menu class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
       <v-btn icon large flat slot="activator" :ripple="false">
         <v-avatar size="42px">
-          <img src="./../../assets/kmt2.jpg"/>
+          <img :src="this.imageUrl"/>
         </v-avatar>
       </v-btn>
       <v-list>
@@ -230,10 +230,12 @@
   </v-toolbar>
 </template>
 <script>
-
+import utils from "../../utils/utils";
 export default {
   data() {
     return {
+      localDomain: utils.constant.localDomain,
+      imageUrl: "",
       rating: null,
       dialog: false,
       dialogSettings: false,
@@ -323,8 +325,12 @@ export default {
         // { name: 'Simplified Chinese', languageCode: 'ch', path: require('../../assets/flags/ch.png') }
       ]
     }
-  },
 
+  },
+  async created() {
+    const level = JSON.parse(localStorage.getItem("adminLevel"));
+    this.imageUrl=this.localDomain + '/user' + level.imagePath;
+  },
   computed: {
     selectedLanguageFlag() {
       const vm = this;
