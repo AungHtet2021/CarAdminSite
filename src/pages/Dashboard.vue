@@ -3,7 +3,7 @@
     <v-layout row wrap>
       <!-- Widgets-->
       <v-flex d-flex lg4 sm6 xs12>
-        <widget icon="money_off" title="$1,287,687"  :supTitle="$t('widgetTodaysTotalAmount')" color="#dc3545"/>
+        <widget icon="money_off" :title=result :supTitle="$t('widgetTodaysTotalAmount')" color="#dc3545"/>
       </v-flex>
       <v-flex d-flex lg4 sm6 xs12>
         <widget icon="domain" :title= toDayRegistrationCount :supTitle="$t('widgetTodaysRegistraion')" color="#00b297"/>
@@ -47,6 +47,8 @@ import api from "../utils/api.js";
 export default {
   data() {
     return {
+      total:[],
+      result:null,
       toDayRegistrationCount : 0,
       toDayOrderCount : 0,
       todayDate : '',
@@ -61,11 +63,12 @@ export default {
     const month = + current.getMonth()+ 1;
     const year = + current.getFullYear();
     this.todayDate = year+ '-' + month + '-' + date
-    console.log(this.todayDate)
+    // console.log(this.todayDate)
     // this.from = todayDate + ' ' + '00:00:00';
     // this.to = todayDate + ' ' + '23:59:59';
     await this.getToDayRegistration();
     await this.getToDayOrder();
+    await this.getToDaySellingAmount();
   },
 
   methods: {
@@ -74,7 +77,7 @@ export default {
       if (resp) {
         const data = await resp.json();
         this.toDayRegistrationCount = data.length;
-        console.log(this.toDayRegistrationCount)
+        // console.log(this.toDayRegistrationCount)
       } else {
         console.log("something wrong");
       }
@@ -84,10 +87,26 @@ export default {
       const resp=await utils.http.get("/order/getToDayOrder/" + this.todayDate);
       if(resp){
         const data=await resp.json();
+        // console.log(data)
         this.toDayOrderCount=data.length;
-        console.log(data.length)
       }else{
         console.log("something wrong")
+      }
+    },
+
+    async getToDaySellingAmount(){
+      const resp=await utils.http.get("/order/getToDaySellingAmount/" + this.todayDate);
+      if(resp){
+        // console.log(resp)
+        const data = await resp.json();
+        // this.total=data;
+        // console.log(this.total);
+        let z=0;
+        data.forEach(x => {
+            z+=x.total
+        });
+        this.result=z;
+        // console.log(z);
       }
     }
 
