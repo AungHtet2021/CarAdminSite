@@ -15,7 +15,7 @@
               <v-select
                 :items="countries"
                 label="Produce Country"
-                item-text="Country"
+                item-text="name"
                 item-value="id"
                 v-model="newList.produceCountry"
                 :rules="[rules.required]"
@@ -68,7 +68,7 @@
               <v-select
                 :items="countries"
                 label="Produce Country"
-                item-text="ProduceCountry"
+                item-text="name"
                 item-value="id"
                 v-model="brand.produceCountry"
                 :rules="[rules.required]"
