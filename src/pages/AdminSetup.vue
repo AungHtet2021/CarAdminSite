@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="showForm" max-width="650" >
-      <div slot="activator"><v-btn color="lighten-2" >Create Admin</v-btn></div>
+      <div slot="activator"><v-btn v-if="isSuperAdmin" color="lighten-2" >Create Admin</v-btn></div>
       <v-card>
         <v-card-title class="headline lighten-2" primary-title
           >Create Admin
@@ -95,7 +95,7 @@
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.gmail }}</td>
         <td class="text-xs-left">{{ props.item.adminRole }}</td>
-        <td class="text-xs-left">
+        <td v-if="isSuperAdmin" class="text-xs-left">
           <v-icon class="edit" small @click="edit(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)"
             >delete</v-icon
@@ -159,6 +159,7 @@ export default {
       tmpImagePath : "",
       selectDemo: {},
       deleteDialog: false,
+      isSuperAdmin : true,
       newAdmin: {
         // id: null,
         name: "",
@@ -206,6 +207,10 @@ export default {
     };
   },
   async created() {
+    const level = JSON.parse(localStorage.getItem("adminLevel"));
+    if (level.adminRole == 'ADMIN') {
+      this.isSuperAdmin = false;
+    }
     await this.getAllAdmin();
 
   },

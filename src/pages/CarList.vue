@@ -153,7 +153,7 @@
         <td class="text-xs-left">{{ props.item.waitingTime }}</td>
         <td class="text-xs-left">{{ props.item.isPublic }}</td>
         <td class="text-xs-left">{{ props.item.availableTestDrive }}</td>
-        <td class="text-xs-left">
+        <td v-if="isSuperAdmin" class="text-xs-left">
           <v-icon class="edit" small @click="edit(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)"
             >delete</v-icon
@@ -223,6 +223,7 @@ export default {
         discountId: null,
         description: "",
         isPublic: false,
+        isSuperAdmin : true,
         availableTestDrive:false,
         price: null,
         waitingTime: null,
@@ -475,6 +476,10 @@ export default {
   },
 
   async created() {
+    const level = JSON.parse(localStorage.getItem("adminLevel"));
+    if (level.adminRole == 'ADMIN') {
+      this.isSuperAdmin = false;
+    }
     await this.getAllCategorys();
     await this.getAllBrands();
     await this.getAllDiscount();

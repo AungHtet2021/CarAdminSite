@@ -86,7 +86,7 @@
           <v-list-tile-action> <v-icon>fa-solid fa-users</v-icon> </v-list-tile-action>
           <v-list-tile-title
             :class="[{ active: selectedIndex === 9}, 'item-title']"
-            >{{ $t("Admin User Lists") }}</v-list-tile-title>
+            >{{ $t("User Lists") }}</v-list-tile-title>
         </v-list-tile>
       </v-list-group>
 

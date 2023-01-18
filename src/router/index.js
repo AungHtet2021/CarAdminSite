@@ -193,7 +193,7 @@ export default new Router({
       meta: {
         breadcrumb: [
           { name: 'Reports' },
-          { name: 'Admin User List' }
+          { name: 'User List' }
 
         ]
       }

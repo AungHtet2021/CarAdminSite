@@ -24,7 +24,7 @@
     <v-data-table :headers="headers" :items="categorys" :items-per-page="7" class="elevation-1">
       <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.item.categoryName }}</td>
-        <td class="text-xs-left">
+        <td v-if="isSuperAdmin" class="text-xs-left">
           <v-icon class="edit" small @click="editCategory(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)">delete</v-icon>
         </td>
@@ -85,6 +85,7 @@ export default {
       result:"",
       categoryForm:false,
       editDialog: false,
+      isSuperAdmin : true,
       deleteDialog: false,
       selectDemo: {},
       categorys: [],
@@ -113,6 +114,10 @@ export default {
     };
   },
   async created() {
+    const level = JSON.parse(localStorage.getItem("adminLevel"));
+    if (level.adminRole == 'ADMIN') {
+      this.isSuperAdmin = false;
+    }
     await this.getAllCategorys();
   },
   methods: {

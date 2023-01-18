@@ -108,7 +108,7 @@ export default {
                 if (resp.status == 200) {
                   console.log(resp)
                     const data = await resp.json();
-
+                    localStorage.setItem("adminLevel", JSON.stringify(data));
 
                     this.$router.push({ path: "/dashboard" });
                 }

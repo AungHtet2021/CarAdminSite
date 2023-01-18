@@ -67,7 +67,7 @@
         <td class="text-xs-left">{{ props.item.percentage }}</td>
         <td class="text-xs-left">{{ props.item.fromDate }}</td>
         <td class="text-xs-left">{{ props.item.toDate }}</td>
-        <td class="text-xs-left">
+        <td v-if="isSuperAdmin" class="text-xs-left">
           <v-icon class="edit" small @click="editDiscount(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)"
             >delete</v-icon
@@ -116,6 +116,7 @@ export default {
       error: false,
       showResult: false,
       showError:false,
+      isSuperAdmin : true,
       error:"",
       deleteDialog: false,
       result: "",
@@ -237,6 +238,10 @@ export default {
   },
 
   async created() {
+    const level = JSON.parse(localStorage.getItem("adminLevel"));
+    if (level.adminRole == 'ADMIN') {
+      this.isSuperAdmin = false;
+    }
     await this.getAllDiscount();
   }
 };

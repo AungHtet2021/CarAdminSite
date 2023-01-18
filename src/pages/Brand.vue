@@ -15,7 +15,7 @@
               <v-select
                 :items="countries"
                 label="Produce Country"
-                item-text="name"
+                item-text="Country"
                 item-value="id"
                 v-model="newList.produceCountry"
                 :rules="[rules.required]"
@@ -36,8 +36,8 @@
       <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.item.brandName }}</td>
         <td class="text-xs-left">{{ props.item.produceCountry }}</td>
-        <td class="text-xs-left">
-          <v-icon class="edit" small @click="editBrand(props)">edit</v-icon>
+        <td v-if="isSuperAdmin" class="text-xs-left">
+          <v-icon  class="edit" small @click="editBrand(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)">delete</v-icon>
         </td>
       </template>
@@ -68,7 +68,7 @@
               <v-select
                 :items="countries"
                 label="Produce Country"
-                item-text="name"
+                item-text="ProduceCountry"
                 item-value="id"
                 v-model="brand.produceCountry"
                 :rules="[rules.required]"
@@ -125,6 +125,7 @@ export default {
       brandFrom:false,
       editDialog: false,
       deleteDialog: false,
+      isSuperAdmin : true,
       selectDemo: {},
       brands: [],
       brand: [],
@@ -155,6 +156,10 @@ export default {
     };
   },
   async created() {
+    const level = JSON.parse(localStorage.getItem("adminLevel"));
+    if (level.adminRole == 'ADMIN') {
+      this.isSuperAdmin = false;
+    }
     await this.getAllBrands();
   },
   methods: {
