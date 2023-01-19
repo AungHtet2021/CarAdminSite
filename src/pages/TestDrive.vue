@@ -78,6 +78,7 @@ export default {
       rejectDialog: false,
       approveDialog: false,
       selectedId: "",
+      selected : {},
       message: "",
       selectedEmail: "",
       headers: [
@@ -138,6 +139,7 @@ export default {
 
     async rejectRequest(props) {
       this.rejectDialog = true;
+      this.selected = props.item;
       this.selectedId = props.item.id;
       this.selectedEmail = props.item.gmail;
     },
@@ -150,13 +152,16 @@ export default {
 
     reject(id) {
       // tmp = this.message;
+      let tmp = "<p>Hey " + this.selected.name + "</p>";
+      tmp = tmp + "<p>" + this.message + "</p>" +
+          "<p>Car Guru Team</p>";
       Email.send({
         SecureToken: "79888d3d-3cbf-44ca-a4dd-8bb6076f3c01",
         To: this.selectedEmail,
         From: "khantminthu199666@gmail.com",
         Subject: "Test Drive Request Notification",
-        Body: this.message
-      }).then(message => alert(message + "Please Check Your Email"));
+        Body: tmp
+      }).then(message => alert("Send Email Successfully"));
       this.rejectDialog = false;
     },
 
@@ -176,7 +181,7 @@ export default {
 </script>
 <style>
 .approve {
-  color: #ff9800 !important;
+  color: #16da6e !important;
   font-size: 20px !important;
 }
 
