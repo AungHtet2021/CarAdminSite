@@ -13,6 +13,15 @@
         <td class="text-xs-left">{{ props.item.gender }}</td>
         <td class="text-xs-left">{{ props.item.country }}</td>
         <td class="text-xs-left">{{ props.item.phone }}</td>
+        <div v-if="props.item.status==='Approve'">
+          <td class="text-xs-left" style="color:green; ">{{ props.item.status }}</td>
+        </div>
+        <div v-else-if="props.item.status==='Reject'">
+          <td class="text-xs-left" style="color:red">{{ props.item.status }}</td>
+        </div>
+        <div v-else>
+          <td class="text-xs-left" style="color:darkgoldenrod">{{ props.item.status }}</td>
+        </div>
 
         <td class="text-xs-left">
           <v-icon class="approve" small @click="approveRequest(props)"
@@ -36,7 +45,7 @@
           <v-btn
             style="margin-bottom: 10px;margin-right: 10px;"
             color="primary"
-            @click="reject(selectedId)"
+            @click="reject(rejectData.id)"
             >Send Email</v-btn
           >
         </v-card-actions>
@@ -56,7 +65,7 @@
           <v-btn
             style="margin-bottom: 10px;margin-right: 10px;"
             color="primary"
-            @click="approve(selectedId)"
+            @click="approve(approveData.id)"
             >Send Email</v-btn
           >
         </v-card-actions>
@@ -74,6 +83,10 @@ export default {
   },
   data() {
     return {
+      accept:"Approve",
+      approveData:[],
+      rejectData:[],
+      rejectText:"Reject",
       testDrives: [],
       rejectDialog: false,
       approveDialog: false,
@@ -118,6 +131,12 @@ export default {
           align: "left",
           sortable: false
         },
+        {
+          text: "Status",
+          value: "status",
+          align: "left",
+          sortable: false
+        },
 
         { text: "Actions", value: "actions" }
       ]
@@ -131,6 +150,7 @@ export default {
       const resp = await api.get("testDrive/get/testDrives");
       if (resp) {
         const data = await resp.json();
+        // console.log(data)
         if (data) this.testDrives = data;
       } else {
         console.log("something wrong");
@@ -138,6 +158,12 @@ export default {
     },
 
     async rejectRequest(props) {
+      const resp=await api.get("testDrive/get/testDrive/" + props.item.id);
+      if(resp.status==200){
+        const data =await resp.json();
+        this.rejectData=data;
+        // console.log(data)
+      }
       this.rejectDialog = true;
       this.selected = props.item;
       this.selectedId = props.item.id;
@@ -145,13 +171,34 @@ export default {
     },
 
     async approveRequest(props) {
+      // console.log(props.item.id)
+      const resp=await api.get("testDrive/get/testDrive/" + props.item.id);
+      if(resp.status==200){
+        const data = await resp.json();
+        this.approveData=data;
+          // console.log(this.datas.id)
+      }
       this.approveDialog = true;
       this.selectedId = props.item.id;
       this.selectedEmail = props.item.gmail;
     },
 
-    reject(id) {
+   async reject(id) {
       // tmp = this.message;
+      const resp=await api.update("testDrive/update/" +id,{
+        id:this.rejectData.id,
+        name:this.rejectData.name,
+        gmail:this.rejectData.gmail,
+        gender:this.rejectData.gender,
+        country:this.rejectData.country,
+        phone:this.rejectData.phone,
+        requestDate:this.rejectData.requestDate,
+        carId:this.rejectData.carId,
+        status:this.rejectText,
+      });
+      if(resp.status==200){
+        console.log(resp)
+      }
       let tmp = "<p>Hey " + this.selected.name + "</p>";
       tmp = tmp + "<p>" + this.message + "</p>" +
           "<p>Car Guru Team</p>";
@@ -165,18 +212,34 @@ export default {
       this.rejectDialog = false;
     },
 
-    approve(id) {
+   async approve(id) {
+      const resp=await api.update("testDrive/update/" + id,{
+          id:this.approveData.id,
+          name:this.approveData.name,
+          gmail:this.approveData.gmail,
+          gender:this.approveData.gender,
+          country:this.approveData.country,
+          phone:this.approveData.phone,
+          requestDate:this.approveData.requestDate,
+          carId:this.approveData.carId,
+          status:this.accept,
+      });
 
-      Email.send({
+      if(resp.status==200){
+        const data = await resp.json();
+        // console.log(data);
+        Email.send({
         SecureToken: "79888d3d-3cbf-44ca-a4dd-8bb6076f3c01",
         To: this.selectedEmail,
         From: "khantminthu199666@gmail.com",
         Subject: "Test Drive Request Notification",
         Body:  this.message
       }).then(message => alert("Please Check Your Email"));
+      // this.approve="accept"
       this.approveDialog = false;
     }
   }
+      }
 };
 </script>
 <style>
