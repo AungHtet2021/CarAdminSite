@@ -250,23 +250,6 @@ export default {
       result: '',
       items: [
         {
-          icon: 'account_circle',
-          href: '#',
-          title: 'Profile',
-          click: (e) => {
-          }
-        },
-        {
-          icon: 'settings',
-          href: '#',
-          title: 'Settings',
-          click: () => {
-            const vm = this;
-
-            vm.dialogSettings = true;
-          }
-        },
-        {
           icon: 'exit_to_app',
           href: '#',
           title: 'Log Out',
