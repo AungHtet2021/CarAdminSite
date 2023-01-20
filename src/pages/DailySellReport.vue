@@ -19,26 +19,26 @@
       :rows-per-page-items="[10, 25]"
     >
       <template slot="items" slot-scope="props">
-        <td> <v-img
+        <!-- <td> <v-img
             :src="localDomain +'/user'+ props.item.userImage"
             width="80"
             height="80"
             contain
-          ></v-img></td>
+          ></v-img></td> -->
         <td class="text-xs-left" >{{ props.item.userName}}</td>
         <!-- <td class="text-xs-left">{{ props.item.userImage}}</td> -->
         <td class="text-xs-left">{{ props.item.userGmail }}</td>
         <td class="text-xs-left">{{ props.item.name}}</td>
         <!-- <td class="text-xs-left">{{ props.item.image_path}}</td> -->
-        <td> <v-img
+        <!-- <td> <v-img
             :src="localDomain +'/car'+ props.item.image_path"
             width="80"
             height="80"
             contain
-          ></v-img></td>
+          ></v-img></td> -->
         <td class="text-xs-left">{{ props.item.car_quantity}}</td>
         <td class="text-xs-left">{{ props.item.total}}</td>
-        <td class="text-xs-left">{{ props.item.created_at}}</td>
+        <!-- <td class="text-xs-left">{{ props.item.created_at}}</td> -->
         <!-- <td class="text-xs-left">{{ props.item.orderId}}</td> -->
         <!-- <td class="text-xs-left">{{ props.item.username }}</td> -->
         <!-- <td class="text-xs-left">{{ props }}</td> -->
@@ -79,10 +79,10 @@ export default {
       users:[],
 
         columns : [
-                    {
-                        label: "User Image",
-                        field: "userImage",
-                    },
+                    // {
+                    //     label: "User Image",
+                    //     field: "userImage",
+                    // },
                     {
                         label: "User Name",
                         field: "userName",
@@ -96,10 +96,10 @@ export default {
                         label: "Car Name",
                         field: "name",
                     },
-                    {
-                        label: "Car Image",
-                        field: "image_path",
-                    },
+                    // {
+                    //     label: "Car Image",
+                    //     field: "image_path",
+                    // },
                     {
                         label: "Quantity",
                         field: "car_quantity",
@@ -108,21 +108,21 @@ export default {
                         label: "Total",
                         field: "total",
                     },
-                    {
-                        label: "Created At",
-                        field: "created_at",
-                    },
+                    // {
+                    //     label: "Created At",
+                    //     field: "created_at",
+                    // },
                 ],
 
 
       users: [],
       headers: [
-        {
-          text: "User Image",
-          value: "Car Name",
-          align: "left",
-          sortable: true
-        },
+        // {
+        //   text: "User Image",
+        //   value: "Car Name",
+        //   align: "left",
+        //   sortable: true
+        // },
         {
           text: "User Name",
           value: "Car Image",
@@ -141,12 +141,12 @@ export default {
           align: "left",
           sortable: true
         },
-        {
-          text: "Car Image",
-          value: "Email",
-          align: "left",
-          sortable: true
-        },
+        // {
+        //   text: "Car Image",
+        //   value: "Email",
+        //   align: "left",
+        //   sortable: true
+        // },
         {
           text: "Quantity",
           value: "Phone",
@@ -159,12 +159,12 @@ export default {
           align: "left",
           sortable: true
         },
-        {
-          text: "Created At",
-          value: "Website",
-          align: "left",
-          sortable: true
-        }
+        // {
+        //   text: "Created At",
+        //   value: "Website",
+        //   align: "left",
+        //   sortable: true
+        // }
       ]
     };
   },

@@ -94,13 +94,13 @@
         <!-- <td class="text-xs-left">{{ props.item.password }}</td> -->
         <td class="text-xs-left">{{ props.item.gmail }}</td>
         <td class="text-xs-left">{{ props.item.phone }}</td>
-        <td class="text-xs-left">{{ props.item.createdAt }}</td>
-        <td class="text-xs-left">
+        <!-- <td class="text-xs-left">{{ props.item.createdAt }}</td> -->
+        <!-- <td class="text-xs-left">
           <v-icon class="edit" small @click="edit(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)"
             >delete</v-icon
           >
-        </td>
+        </td> -->
 
         </template>
       </v-data-table>
@@ -181,14 +181,14 @@
                           label: "Phone",
                           field: "phone",
                       },
-                      {
-                          label: "Created At",
-                          field: "createdAt",
-                      },
-                      {
-                          label: "Photo",
-                          field: "imagePath",
-                      },
+                      // {
+                      //     label: "Created At",
+                      //     field: "createdAt",
+                      // },
+                      // {
+                      //     label: "Photo",
+                      //     field: "imagePath",
+                      // },
                   ],
 
 
@@ -226,12 +226,12 @@
             align: "left",
             sortable: true
           },
-          {
-            text: "Created At",
-            value: "createdAt",
-            align: "left",
-            sortable: true
-          },
+          // {
+          //   text: "Created At",
+          //   value: "createdAt",
+          //   align: "left",
+          //   sortable: true
+          // },
         ]
       };
     },

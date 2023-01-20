@@ -14,13 +14,13 @@
         <td class="text-xs-left">{{ props.item.country }}</td>
         <td class="text-xs-left">{{ props.item.phone }}</td>
         <div v-if="props.item.status==='Approve'">
-          <td class="text-xs-left" style="color:green; ">{{ props.item.status }}</td>
+          <td class="text-xs-left" style="color:green; padding-top: 13px;">{{ props.item.status }}</td>
         </div>
         <div v-else-if="props.item.status==='Reject'">
-          <td class="text-xs-left" style="color:red">{{ props.item.status }}</td>
+          <td class="text-xs-left" style="color:red; padding-top:13px;">{{ props.item.status }}</td>
         </div>
         <div v-else>
-          <td class="text-xs-left" style="color:darkgoldenrod">{{ props.item.status }}</td>
+          <td class="text-xs-left" style="color:darkgoldenrod; padding-top:13px;">{{ props.item.status }}</td>
         </div>
 
         <td class="text-xs-left">
@@ -71,6 +71,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar color="green" v-model="showResult" :timeout="2000" top>
+      {{ result }}
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -83,6 +86,8 @@ export default {
   },
   data() {
     return {
+      showResult:false,
+      result:"Successfully Save!",
       accept:"Approve",
       approveData:[],
       rejectData:[],
@@ -208,7 +213,8 @@ export default {
         From: "khantminthu199666@gmail.com",
         Subject: "Test Drive Request Notification",
         Body: tmp
-      }).then(message => alert("Send Email Successfully"));
+      }).then(message => this.showResult=true);
+      this.getAllTestDrive();
       this.rejectDialog = false;
     },
 
@@ -234,8 +240,9 @@ export default {
         From: "khantminthu199666@gmail.com",
         Subject: "Test Drive Request Notification",
         Body:  this.message
-      }).then(message => alert("Please Check Your Email"));
+      }).then(message => this.showResult=true);
       // this.approve="accept"
+      this.getAllTestDrive();
       this.approveDialog = false;
     }
   }
