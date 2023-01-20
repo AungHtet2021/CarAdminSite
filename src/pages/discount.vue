@@ -27,7 +27,7 @@
               :rules="[rules.required]"
             ></v-text-field>
 
-            <v-text-field
+            <!-- <v-text-field
               name="FromDate"
               label="From Date"
               type="date"
@@ -43,7 +43,7 @@
               v-model="discount.toDate"
               :error="error"
               :rules="[rules.required]"
-            ></v-text-field>
+            ></v-text-field> -->
           </v-form>
         </v-card-text>
 
@@ -65,8 +65,8 @@
       <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.item.discountName }}</td>
         <td class="text-xs-left">{{ props.item.percentage }}</td>
-        <td class="text-xs-left">{{ props.item.fromDate }}</td>
-        <td class="text-xs-left">{{ props.item.toDate }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.fromDate }}</td>
+        <td class="text-xs-left">{{ props.item.toDate }}</td> -->
         <td v-if="isSuperAdmin" class="text-xs-left">
           <v-icon class="edit" small @click="editDiscount(props)">edit</v-icon>
           <v-icon class="delete" small @click="deleteItem(props)"
@@ -107,8 +107,8 @@ export default {
         id: null,
         discountName: "",
         percentage: "",
-        fromDate: new Date(),
-        toDate: new Date()
+        fromDate: "2022-12-22",
+        toDate: "2022-12-30"
       },
       loading: false,
       dialog: false,
@@ -139,18 +139,18 @@ export default {
           align: "left",
           sortable: true
         },
-        {
-          text: "FromDate",
-          value: "fromDate",
-          align: "left",
-          sortable: true
-        },
-        {
-          text: "ToDate",
-          value: "toDate",
-          align: "left",
-          sortable: true
-        },
+        // {
+        //   text: "FromDate",
+        //   value: "fromDate",
+        //   align: "left",
+        //   sortable: true
+        // },
+        // {
+        //   text: "ToDate",
+        //   value: "toDate",
+        //   align: "left",
+        //   sortable: true
+        // },
         { text: "Actions", value: "actions" }
       ]
     };
@@ -216,8 +216,6 @@ export default {
           this.discount.toDate = data.toDate;
           this.dialog = true;
         }
-      } else {
-        console.log("something wrong");
       }
     },
 
@@ -231,8 +229,6 @@ export default {
       if (resp.status == 200) {
         this.deleteDialog = false;
         await this.getAllDiscount();
-      } else {
-        console.log("sth wrong in delete id");
       }
     }
   },
