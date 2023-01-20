@@ -87,7 +87,7 @@ export default {
   data() {
     return {
       showResult:false,
-      result:"Successfully Save!",
+      result:"Send Email Successful",
       accept:"Approve",
       approveData:[],
       rejectData:[],
