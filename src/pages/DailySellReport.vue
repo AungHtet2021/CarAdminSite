@@ -38,7 +38,7 @@
           ></v-img></td> -->
         <td class="text-xs-left">{{ props.item.car_quantity}}</td>
         <td class="text-xs-left">{{ props.item.total}}</td>
-        <!-- <td class="text-xs-left">{{ props.item.created_at}}</td> -->
+        <td class="text-xs-left">{{ props.item.created_at}}</td>
         <!-- <td class="text-xs-left">{{ props.item.orderId}}</td> -->
         <!-- <td class="text-xs-left">{{ props.item.username }}</td> -->
         <!-- <td class="text-xs-left">{{ props }}</td> -->
@@ -108,10 +108,10 @@ export default {
                         label: "Total",
                         field: "total",
                     },
-                    // {
-                    //     label: "Created At",
-                    //     field: "created_at",
-                    // },
+                    {
+                        label: "Created At",
+                        field: "created_at",
+                    },
                 ],
 
 
@@ -159,12 +159,12 @@ export default {
           align: "left",
           sortable: true
         },
-        // {
-        //   text: "Created At",
-        //   value: "Website",
-        //   align: "left",
-        //   sortable: true
-        // }
+        {
+          text: "Date",
+          value: "Website",
+          align: "left",
+          sortable: true
+        }
       ]
     };
   },
