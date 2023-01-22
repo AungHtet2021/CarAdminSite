@@ -75,30 +75,6 @@ export default {
   },
 
   methods: {
-    // login() {
-    //   const vm = this;
-    //   utils
-
-    //   if (!vm.adminEmail || !vm.password) {
-
-    //     vm.result = "Email and Password can't be null.";
-    //     vm.showResult = true;
-
-    //     return;
-    //   }
-    //   else {
-    //     console.log('login')
-    //     vm.$router.push({ name: 'Dashboard' });
-    //   }
-    //  /* if (vm.userEmail === vm.$root.userEmail && vm.password === vm.$root.userPassword) {
-    //     vm.$router.push({ name: 'Dashboard' });
-    //   }
-    //   else {
-    //     vm.error = true;
-    //     vm.result = "Email or Password is incorrect.";
-    //     vm.showResult = true;
-    //   }*/
-    // },
     async login() {
             if (true) {
                 const resp = await utils.http.post("/admin/login", {

@@ -39,27 +39,9 @@
         <td class="text-xs-left">{{ props.item.car_quantity}}</td>
         <td class="text-xs-left">{{ props.item.total}}</td>
         <td class="text-xs-left">{{ props.item.created_at}}</td>
-        <!-- <td class="text-xs-left">{{ props.item.orderId}}</td> -->
-        <!-- <td class="text-xs-left">{{ props.item.username }}</td> -->
-        <!-- <td class="text-xs-left">{{ props }}</td> -->
-        <!-- <td class="text-xs-left">{{ props.item.phone }}</td> -->
-        <!-- <td class="text-xs-left">{{ props.item.company.name }}</td> -->
-        <!-- <td class="text-xs-left">{{ props.item.website }}</td> -->
       </template>
 
     </v-data-table>
-    <!-- <v-data-table
-      class="table"
-      :headers="headers"
-      :items="users"
-      :rows-per-page-items="[10, 25]"
-    >
-      <template slot="items" slot-scope="props">
-
-        <td class="text-xs-left" >{{ props.item.name}}</td>
-
-      </template>
-    </v-data-table> -->
   </div>
 </template>
 
@@ -187,28 +169,10 @@ export default {
         console.log("something wrong")
       }
     },
-    // async getUser(prop) {
-    //   const resp = await api.get("user/get/user/" + prop);
-    //   if (resp) {
-    //     console.log(resp)
-    //     const data = await resp.json();
-    //    if(data) this.users=data;
-    //   }
-    //   else {
-    //     console.log("something wrong")
-    //   }
-    // },
+
   },
 
-  // created() {
-  //   const vm = this;
-  //   vm.axios
-  //     .get("https://jsonplaceholder.typicode.com/users")
-  //     .then(response => {
-  //       var result = response && response.data;
-  //       vm.users = result;
-  //     });
-  // }
+
 
 
 };
