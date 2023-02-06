@@ -159,7 +159,7 @@
             >delete</v-icon
           >
         </td>
-        <!-- <td class="text-xs-left">{{ props.item.address.city }}</td> -->
+ 
       </template>
     </v-data-table>
     <v-dialog v-model="deleteDialog" width="450">
